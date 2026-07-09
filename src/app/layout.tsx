@@ -4,6 +4,7 @@ import "./globals.css";
 import { StoreProvider } from "@/contexts/StoreContext";
 import BackgroundEngine from "@/components/BackgroundEngine";
 import AudioPlayer from "@/components/AudioPlayer";
+import LaunchTimer from "@/components/LaunchTimer";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -18,8 +19,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Happy Birthday Anushka",
-  description: "A premium cinematic birthday experience just for you.",
+  title: "Secret",
+  description: "A secure project preview.",
 };
 
 export default function RootLayout({
@@ -35,9 +36,11 @@ export default function RootLayout({
         <StoreProvider>
           <BackgroundEngine />
           <AudioPlayer />
-          <div className="relative z-10 min-h-screen flex flex-col">
-            {children}
-          </div>
+          <LaunchTimer>
+            <div className="relative z-10 min-h-screen flex flex-col">
+              {children}
+            </div>
+          </LaunchTimer>
         </StoreProvider>
       </body>
     </html>
