@@ -28,7 +28,7 @@ export default function Screen17_VideoSurprise() {
     setSpinning(true);
     setWonPrize(null);
 
-    const winIndex = Math.floor(Math.random() * PRIZES.length);
+    const winIndex = 3; // "A Beautiful Watch"
     const segmentAngle = 360 / PRIZES.length; 
     
     const randomOffset = Math.floor(Math.random() * (segmentAngle - 20)) - (segmentAngle / 2 - 10); 
