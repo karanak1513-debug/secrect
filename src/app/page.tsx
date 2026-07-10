@@ -3,7 +3,9 @@
 import { useStore } from "@/contexts/StoreContext";
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { motion } from "framer-motion";
 
+// --- Private Mode Screens ---
 import Screen1_Splash from "@/components/screens/Screen1_Splash";
 import Screen2_Disclaimer from "@/components/screens/Screen2_Disclaimer";
 import Screen3_Welcome from "@/components/screens/Screen3_Welcome";
@@ -26,8 +28,14 @@ import Screen19_FinalWish from "@/components/screens/Screen19_FinalWish";
 import Screen20_OneLastSurprise from "@/components/screens/Screen20_OneLastSurprise";
 import Screen21_MemoryCapsule from "@/components/screens/Screen21_MemoryCapsule";
 
+// --- Family Mode Screens ---
+import Screen1_FamilyWelcome from "@/components/family_screens/Screen1_FamilyWelcome";
+import Screen2_FamilyWishes from "@/components/family_screens/Screen2_FamilyWishes";
+import Screen3_FamilyLuckyWheel from "@/components/family_screens/Screen3_FamilyLuckyWheel";
+import Screen4_FamilyBirthdayCard from "@/components/family_screens/Screen4_FamilyBirthdayCard";
+
 export default function Home() {
-  const { currentScreen } = useStore();
+  const { currentScreen, appMode } = useStore();
 
   useEffect(() => {
     // Initialize smooth scrolling
@@ -55,38 +63,50 @@ export default function Home() {
 
   return (
     <main className="flex-1 w-full flex flex-col items-center justify-center min-h-screen overflow-hidden">
-      {currentScreen === 1 && <Screen1_Splash />}
-      {currentScreen === 2 && <Screen2_Disclaimer />}
-      {currentScreen === 3 && <Screen3_Welcome />}
-      {currentScreen === 4 && <Screen4_MagicDoor />}
-      {currentScreen === 5 && <Screen5_WhereItAllBegan />}
-      {currentScreen === 6 && <Screen6_MemoryGallery />}
-      {currentScreen === 7 && <Screen7_MemoryPuzzle />}
-      {currentScreen === 8 && <Screen8_BalloonGame />}
-      {currentScreen === 9 && <Screen9_Quiz />}
-      {currentScreen === 10 && <Screen10_Reasons />}
-      {currentScreen === 11 && <Screen11_LoveMeter />}
-      {currentScreen === 12 && <Screen12_RoseBouquet />}
-      {currentScreen === 13 && <Screen13_BirthdayCake />}
-      {currentScreen === 14 && <Screen14_GiftBox />}
-      {currentScreen === 15 && <Screen15_SlotMachine />}
-      {currentScreen === 16 && <Screen16_Message />}
-      {currentScreen === 17 && <Screen17_VideoSurprise />}
-      {currentScreen === 18 && <Screen18_TimeFreeze />}
-      {currentScreen === 19 && <Screen19_FinalWish />}
-      {currentScreen === 20 && <Screen20_OneLastSurprise />}
-      {currentScreen === 21 && <Screen21_MemoryCapsule />}
+      {appMode === "private" && (
+        <>
+          {currentScreen === 1 && <Screen1_Splash />}
+          {currentScreen === 2 && <Screen2_Disclaimer />}
+          {currentScreen === 3 && <Screen3_Welcome />}
+          {currentScreen === 4 && <Screen4_MagicDoor />}
+          {currentScreen === 5 && <Screen5_WhereItAllBegan />}
+          {currentScreen === 6 && <Screen6_MemoryGallery />}
+          {currentScreen === 7 && <Screen7_MemoryPuzzle />}
+          {currentScreen === 8 && <Screen8_BalloonGame />}
+          {currentScreen === 9 && <Screen9_Quiz />}
+          {currentScreen === 10 && <Screen10_Reasons />}
+          {currentScreen === 11 && <Screen11_LoveMeter />}
+          {currentScreen === 12 && <Screen12_RoseBouquet />}
+          {currentScreen === 13 && <Screen13_BirthdayCake />}
+          {currentScreen === 14 && <Screen14_GiftBox />}
+          {currentScreen === 15 && <Screen15_SlotMachine />}
+          {currentScreen === 16 && <Screen16_Message />}
+          {currentScreen === 17 && <Screen17_VideoSurprise />}
+          {currentScreen === 18 && <Screen18_TimeFreeze />}
+          {currentScreen === 19 && <Screen19_FinalWish />}
+          {currentScreen === 20 && <Screen20_OneLastSurprise />}
+          {currentScreen === 21 && <Screen21_MemoryCapsule />}
+        </>
+      )}
+
+      {appMode === "family" && (
+        <>
+          {currentScreen === 1 && <Screen1_FamilyWelcome />}
+          {currentScreen === 2 && <Screen2_FamilyWishes />}
+          {currentScreen === 3 && <Screen3_FamilyLuckyWheel />}
+          {currentScreen === 4 && <Screen4_FamilyBirthdayCard />}
+        </>
+      )}
 
       {currentScreen > 1 && <ProgressIndicator />}
     </main>
   );
 }
 
-import { motion } from "framer-motion";
-
 function ProgressIndicator() {
-  const { currentScreen } = useStore();
-  const totalScreens = 21;
+  const { currentScreen, appMode } = useStore();
+  
+  const totalScreens = appMode === "family" ? 4 : 21;
   
   if (currentScreen === 1 || currentScreen === totalScreens) return null;
 
