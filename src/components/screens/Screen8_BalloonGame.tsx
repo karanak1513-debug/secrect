@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/contexts/StoreContext";
 import confetti from "canvas-confetti";
 
-export default function Screen4_BalloonGame() {
+export default function Screen8_BalloonGame() {
   const { setCurrentScreen } = useStore();
   const [lit, setLit] = useState(Array(6).fill(false));
   const words = ["AAJ", "KA", "DIN", "SIRF", "TUMHARE", "NAAM"];
@@ -35,7 +35,7 @@ export default function Screen4_BalloonGame() {
     if (lit.every(Boolean)) {
       // All lit! Wait 3 seconds then go to next
       setTimeout(() => {
-        setCurrentScreen(5);
+        setCurrentScreen(9);
       }, 4000);
     }
   }, [lit, setCurrentScreen]);

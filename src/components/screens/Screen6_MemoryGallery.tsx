@@ -14,7 +14,7 @@ const IMAGES = [
   "/photo4.jpg",
 ];
 
-export default function Screen11_MemoryGallery() {
+export default function Screen6_MemoryGallery() {
   const { setCurrentScreen } = useStore();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -38,8 +38,10 @@ export default function Screen11_MemoryGallery() {
             key={index} 
             layoutId={`card-${index}`}
             onClick={() => setSelectedId(`card-${index}`)}
-            className="bg-white p-3 pb-12 rounded-sm shadow-xl cursor-pointer rotate-[-2deg] hover:rotate-[2deg] hover:scale-105 transition-transform duration-300 relative w-40 md:w-56"
+            className="bg-white p-3 pb-12 rounded-sm cursor-pointer rotate-[-2deg] hover:rotate-[2deg] hover:scale-105 transition-transform duration-300 relative w-40 md:w-56"
             style={{ 
+              backgroundColor: "#ffffff",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
               transform: `rotate(${index % 2 === 0 ? -3 : 4}deg)` 
             }}
           >
@@ -64,7 +66,11 @@ export default function Screen11_MemoryGallery() {
           >
             <motion.div 
               layoutId={selectedId}
-              className="bg-white p-4 pb-16 rounded-md w-full max-w-lg shadow-2xl relative"
+              className="bg-white p-4 pb-16 rounded-md w-full max-w-lg relative"
+              style={{ 
+                backgroundColor: "#ffffff",
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <button 
@@ -96,7 +102,7 @@ export default function Screen11_MemoryGallery() {
         transition={{ delay: 2 }}
         className="mt-16 z-20"
       >
-        <CinematicButton onClick={() => setCurrentScreen(12)}>
+        <CinematicButton onClick={() => setCurrentScreen(7)}>
           I have one more surprise 🎬
         </CinematicButton>
       </motion.div>

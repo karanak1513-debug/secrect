@@ -6,7 +6,7 @@ import { useStore } from "@/contexts/StoreContext";
 import CinematicButton from "@/components/ui/CinematicButton";
 import confetti from "canvas-confetti";
 
-export default function Screen2_Welcome() {
+export default function Screen3_Welcome() {
   const { setCurrentScreen } = useStore();
   
   // Runaway NO button
@@ -29,7 +29,7 @@ export default function Screen2_Welcome() {
       zIndex: 100
     });
     setTimeout(() => {
-      setCurrentScreen(3);
+      setCurrentScreen(4);
     }, 1200);
   };
 
@@ -62,7 +62,7 @@ export default function Screen2_Welcome() {
             className="font-playfair text-4xl md:text-6xl lg:text-7xl font-bold text-[#F3E5AB] drop-shadow-[0_0_20px_rgba(212,175,55,0.3)] flex items-center justify-center gap-4 flex-wrap"
           >
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-[#D4AF37] via-[#FFB6C1] to-[#F3E5AB]">
-              Meri Pyaari Anushka
+              Mere Anushka
             </span>
             <span>❤️</span>
           </motion.h2>

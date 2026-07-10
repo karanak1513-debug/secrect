@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/contexts/StoreContext";
 
-export default function Screen3_MagicDoor() {
+export default function Screen4_MagicDoor() {
   const { setCurrentScreen } = useStore();
   const [isUnlocked, setIsUnlocked] = useState(false);
 
@@ -12,7 +12,7 @@ export default function Screen3_MagicDoor() {
     if (isUnlocked) return;
     setIsUnlocked(true);
     setTimeout(() => {
-      setCurrentScreen(4);
+      setCurrentScreen(5);
     }, 2500); // Wait for the explosion animation
   };
 

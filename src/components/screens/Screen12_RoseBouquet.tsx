@@ -6,7 +6,7 @@ import { useStore } from "@/contexts/StoreContext";
 import CinematicButton from "@/components/ui/CinematicButton";
 import confetti from "canvas-confetti";
 
-export default function Screen7_RoseBouquet() {
+export default function Screen12_RoseBouquet() {
   const { setCurrentScreen } = useStore();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -97,13 +97,13 @@ export default function Screen7_RoseBouquet() {
             >
               <div className="relative">
                 {/* Decorative Quotes */}
-                <span className="absolute -top-12 -left-8 text-8xl text-[#D4AF37]/20 font-playfair select-none">"</span>
+                <span className="absolute -top-12 -left-8 text-8xl text-[#D4AF37]/20 font-playfair select-none">&quot;</span>
                 
                 <h3 className="font-playfair text-2xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-[#FFF3B0] via-white to-[#D4AF37] leading-relaxed drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
                   Meri zindagi ko itna khoobsurat banane ke liye shukriya.
                 </h3>
                 
-                <span className="absolute -bottom-24 -right-8 text-8xl text-[#D4AF37]/20 font-playfair select-none">"</span>
+                <span className="absolute -bottom-24 -right-8 text-8xl text-[#D4AF37]/20 font-playfair select-none">&quot;</span>
               </div>
               
               <motion.p 
@@ -127,7 +127,7 @@ export default function Screen7_RoseBouquet() {
             transition={{ delay: 3 }}
             className="absolute bottom-12 z-20"
           >
-            <CinematicButton onClick={() => setCurrentScreen(8)}>
+            <CinematicButton onClick={() => setCurrentScreen(13)}>
               Continue ✨
             </CinematicButton>
           </motion.div>

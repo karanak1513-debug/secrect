@@ -96,7 +96,9 @@ function FloatingParticles({ type, count }: { type: "heart" | "heart-outline" | 
           style={{
             left: `${p.startX}vw`,
             fontSize: `${p.size}px`,
-            filter: type === "heart" ? "drop-shadow(0 0 15px rgba(255,182,193,0.8))" : "drop-shadow(0 0 5px rgba(255,192,203,0.4))"
+            filter: type === "heart" ? "drop-shadow(0 0 15px rgba(255,182,193,0.8))" : "drop-shadow(0 0 5px rgba(255,192,203,0.4))",
+            willChange: "transform",
+            transform: "translateZ(0)"
           }}
           initial={{ y: `${p.startY}vh`, opacity: 0, rotate: 0 }}
           animate={{ 

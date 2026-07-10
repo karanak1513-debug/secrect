@@ -17,7 +17,7 @@ const PRIZES = [
 // Alternate 2 subtle colors. The golden lines will separate the odd touch at the end.
 const COLORS = ["#1a1a1a", "#0a0a0a"];
 
-export default function Screen12_VideoSurprise() {
+export default function Screen17_VideoSurprise() {
   const { setCurrentScreen } = useStore();
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
@@ -168,7 +168,7 @@ export default function Screen12_VideoSurprise() {
             transition={{ delay: 1, duration: 1 }}
             className="absolute bottom-6 md:bottom-8 z-30"
           >
-            <CinematicButton onClick={() => setCurrentScreen(13)}>
+            <CinematicButton onClick={() => setCurrentScreen(18)}>
               To the final wish ✨
             </CinematicButton>
           </motion.div>

@@ -6,7 +6,7 @@ import { useStore } from "@/contexts/StoreContext";
 import CinematicButton from "@/components/ui/CinematicButton";
 import confetti from "canvas-confetti";
 
-export default function Screen6_BirthdayCake() {
+export default function Screen13_BirthdayCake() {
   const { setCurrentScreen } = useStore();
   const [wished, setWished] = useState(false);
 
@@ -27,7 +27,7 @@ export default function Screen6_BirthdayCake() {
 
     // After 5 seconds, move to next screen
     setTimeout(() => {
-      setCurrentScreen(7);
+      setCurrentScreen(14);
     }, 5000);
   };
 

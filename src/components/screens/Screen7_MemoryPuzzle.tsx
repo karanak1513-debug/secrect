@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/contexts/StoreContext";
 import confetti from "canvas-confetti";
 
-export default function Screen5_MemoryPuzzle() {
+export default function Screen7_MemoryPuzzle() {
   const { setCurrentScreen } = useStore();
   const [hasBloomed, setHasBloomed] = useState(false);
 
@@ -24,7 +24,7 @@ export default function Screen5_MemoryPuzzle() {
     });
 
     setTimeout(() => {
-      setCurrentScreen(6);
+      setCurrentScreen(8);
     }, 4500);
   };
 

@@ -19,7 +19,7 @@ const REASONS = [
   "Because you're simply you. 💖✨"
 ];
 
-export default function Screen8_Reasons() {
+export default function Screen10_Reasons() {
   const { setCurrentScreen } = useStore();
 
   return (
@@ -42,7 +42,7 @@ export default function Screen8_Reasons() {
         className="text-center z-20 mb-20 w-full max-w-4xl"
       >
         <h2 className="font-playfair text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-[#D4AF37] to-[#F3E5AB] drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-          12 Reasons You're Special
+          12 Reasons You&apos;re Special
         </h2>
         <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent mx-auto mt-8" />
       </motion.div>
@@ -80,8 +80,8 @@ export default function Screen8_Reasons() {
         <h3 className="font-playfair text-3xl md:text-5xl text-[#D4AF37] mb-12 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]">
           I love you ❤️
         </h3>
-        <CinematicButton onClick={() => setCurrentScreen(9)}>
-          What's Next? 🎁
+        <CinematicButton onClick={() => setCurrentScreen(11)}>
+          What&apos;s Next? 🎁
         </CinematicButton>
       </motion.div>
 

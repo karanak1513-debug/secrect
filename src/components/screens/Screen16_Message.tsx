@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/contexts/StoreContext";
 import CinematicButton from "@/components/ui/CinematicButton";
 
-export default function Screen10_Message() {
+export default function Screen16_Message() {
   const { setCurrentScreen } = useStore();
   const [opened, setOpened] = useState(false);
 
@@ -34,7 +34,7 @@ export default function Screen10_Message() {
               
               {/* Wax Seal */}
               <div className="absolute top-[80px] left-1/2 -translate-x-1/2 w-12 h-12 bg-red-800 rounded-full z-20 shadow-md flex items-center justify-center border-2 border-red-900 group-hover:bg-red-700 transition-colors">
-                <span className="text-pink-100 font-playfair text-xl">A</span>
+                <span className="text-pink-100 font-playfair text-xl">AK</span>
               </div>
             </motion.div>
             <p className="mt-8 font-poppins text-white/80 animate-pulse">Tap to break the seal</p>
@@ -92,7 +92,7 @@ export default function Screen10_Message() {
                 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 1 } } }}
                 className="mb-6 text-center mt-10"
               >
-                <strong className="text-2xl block mb-2">Happy Birthday, Anushka! 🎉</strong>
+                <strong className="text-2xl block mb-2">Happy Birthday Mere Anushka! 🎉</strong>
                 <strong>Bas hamesha aise hi muskurati rehna. I’m grateful to have you in my life. ❤️✨</strong>
               </motion.p>
             </motion.div>
@@ -108,8 +108,8 @@ export default function Screen10_Message() {
             transition={{ delay: 3 }}
             className="mt-12 z-20"
           >
-            <CinematicButton onClick={() => setCurrentScreen(11)}>
-              Our Memories 📸
+            <CinematicButton onClick={() => setCurrentScreen(17)}>
+              See What's Next ✨
             </CinematicButton>
           </motion.div>
         )}

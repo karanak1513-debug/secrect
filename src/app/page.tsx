@@ -5,20 +5,26 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 
 import Screen1_Splash from "@/components/screens/Screen1_Splash";
-import Screen2_Welcome from "@/components/screens/Screen2_Welcome";
-import Screen3_MagicDoor from "@/components/screens/Screen3_MagicDoor";
-import Screen4_BalloonGame from "@/components/screens/Screen4_BalloonGame";
-import Screen5_MemoryPuzzle from "@/components/screens/Screen5_MemoryPuzzle";
-import Screen6_BirthdayCake from "@/components/screens/Screen6_BirthdayCake";
-import Screen7_RoseBouquet from "@/components/screens/Screen7_RoseBouquet";
-import Screen8_Reasons from "@/components/screens/Screen8_Reasons";
-import Screen9_GiftBox from "@/components/screens/Screen9_GiftBox";
-import Screen10_Message from "@/components/screens/Screen10_Message";
-import Screen11_MemoryGallery from "@/components/screens/Screen11_MemoryGallery";
-import Screen12_VideoSurprise from "@/components/screens/Screen12_VideoSurprise";
-import Screen13_FinalWish from "@/components/screens/Screen13_FinalWish";
-import Screen14_MemoryCapsule from "@/components/screens/Screen14_MemoryCapsule";
-// We will import others as we build them
+import Screen2_Disclaimer from "@/components/screens/Screen2_Disclaimer";
+import Screen3_Welcome from "@/components/screens/Screen3_Welcome";
+import Screen4_MagicDoor from "@/components/screens/Screen4_MagicDoor";
+import Screen5_WhereItAllBegan from "@/components/screens/Screen5_WhereItAllBegan";
+import Screen6_MemoryGallery from "@/components/screens/Screen6_MemoryGallery";
+import Screen7_MemoryPuzzle from "@/components/screens/Screen7_MemoryPuzzle";
+import Screen8_BalloonGame from "@/components/screens/Screen8_BalloonGame";
+import Screen9_Quiz from "@/components/screens/Screen9_Quiz";
+import Screen10_Reasons from "@/components/screens/Screen10_Reasons";
+import Screen11_LoveMeter from "@/components/screens/Screen11_LoveMeter";
+import Screen12_RoseBouquet from "@/components/screens/Screen12_RoseBouquet";
+import Screen13_BirthdayCake from "@/components/screens/Screen13_BirthdayCake";
+import Screen14_GiftBox from "@/components/screens/Screen14_GiftBox";
+import Screen15_SlotMachine from "@/components/screens/Screen15_SlotMachine";
+import Screen16_Message from "@/components/screens/Screen16_Message";
+import Screen17_VideoSurprise from "@/components/screens/Screen17_VideoSurprise";
+import Screen18_TimeFreeze from "@/components/screens/Screen18_TimeFreeze";
+import Screen19_FinalWish from "@/components/screens/Screen19_FinalWish";
+import Screen20_OneLastSurprise from "@/components/screens/Screen20_OneLastSurprise";
+import Screen21_MemoryCapsule from "@/components/screens/Screen21_MemoryCapsule";
 
 export default function Home() {
   const { currentScreen } = useStore();
@@ -50,20 +56,27 @@ export default function Home() {
   return (
     <main className="flex-1 w-full flex flex-col items-center justify-center min-h-screen overflow-hidden">
       {currentScreen === 1 && <Screen1_Splash />}
-      {currentScreen === 2 && <Screen2_Welcome />}
-      {currentScreen === 3 && <Screen3_MagicDoor />}
-      {currentScreen === 4 && <Screen4_BalloonGame />}
-      {currentScreen === 5 && <Screen5_MemoryPuzzle />}
-      {currentScreen === 6 && <Screen6_BirthdayCake />}
-      {currentScreen === 7 && <Screen7_RoseBouquet />}
-      {currentScreen === 8 && <Screen8_Reasons />}
-      {currentScreen === 9 && <Screen9_GiftBox />}
-      {currentScreen === 10 && <Screen10_Message />}
-      {currentScreen === 11 && <Screen11_MemoryGallery />}
-      {currentScreen === 12 && <Screen12_VideoSurprise />}
-      {currentScreen === 13 && <Screen13_FinalWish />}
-      {currentScreen === 14 && <Screen14_MemoryCapsule />}
-      
+      {currentScreen === 2 && <Screen2_Disclaimer />}
+      {currentScreen === 3 && <Screen3_Welcome />}
+      {currentScreen === 4 && <Screen4_MagicDoor />}
+      {currentScreen === 5 && <Screen5_WhereItAllBegan />}
+      {currentScreen === 6 && <Screen6_MemoryGallery />}
+      {currentScreen === 7 && <Screen7_MemoryPuzzle />}
+      {currentScreen === 8 && <Screen8_BalloonGame />}
+      {currentScreen === 9 && <Screen9_Quiz />}
+      {currentScreen === 10 && <Screen10_Reasons />}
+      {currentScreen === 11 && <Screen11_LoveMeter />}
+      {currentScreen === 12 && <Screen12_RoseBouquet />}
+      {currentScreen === 13 && <Screen13_BirthdayCake />}
+      {currentScreen === 14 && <Screen14_GiftBox />}
+      {currentScreen === 15 && <Screen15_SlotMachine />}
+      {currentScreen === 16 && <Screen16_Message />}
+      {currentScreen === 17 && <Screen17_VideoSurprise />}
+      {currentScreen === 18 && <Screen18_TimeFreeze />}
+      {currentScreen === 19 && <Screen19_FinalWish />}
+      {currentScreen === 20 && <Screen20_OneLastSurprise />}
+      {currentScreen === 21 && <Screen21_MemoryCapsule />}
+
       {currentScreen > 1 && <ProgressIndicator />}
     </main>
   );
@@ -73,11 +86,11 @@ import { motion } from "framer-motion";
 
 function ProgressIndicator() {
   const { currentScreen } = useStore();
-  const totalScreens = 14;
+  const totalScreens = 21;
   
   if (currentScreen === 1 || currentScreen === totalScreens) return null;
 
-  const romanNumerals = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"];
+  const romanNumerals = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"];
   const progressPercentage = (currentScreen / totalScreens) * 100;
 
   return (

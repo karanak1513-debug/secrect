@@ -6,7 +6,7 @@ import { useStore } from "@/contexts/StoreContext";
 import CinematicButton from "@/components/ui/CinematicButton";
 import confetti from "canvas-confetti";
 
-export default function Screen13_FinalWish() {
+export default function Screen19_FinalWish() {
   const { setCurrentScreen } = useStore();
   const [showFinal, setShowFinal] = useState(false);
   
@@ -89,12 +89,12 @@ export default function Screen13_FinalWish() {
           >
             <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl font-bold mb-12 drop-shadow-[0_0_30px_rgba(255,255,255,0.8)] text-white">
               ❤️ Happy Birthday ❤️<br/>
-              <span className="text-pink-200">My Dear Anushka</span>
+              <span className="text-pink-200">Mere Anushka</span>
             </h1>
 
             <div className="flex flex-wrap justify-center gap-4">
-              <CinematicButton onClick={() => setCurrentScreen(14)}>
-                Open Memory Capsule ⏳
+              <CinematicButton onClick={() => setCurrentScreen(20)}>
+                One Last Surprise 🎁
               </CinematicButton>
             </div>
           </motion.div>

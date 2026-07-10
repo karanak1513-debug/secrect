@@ -14,9 +14,17 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   } | null>(null);
   const [isLaunched, setIsLaunched] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isBypassed, setIsBypassed] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isBypassed) return;
+
     const calculateTimeLeft = () => {
+      if (isBypassed) return;
       const now = new Date().getTime();
       const difference = TARGET_DATE - now;
 
@@ -42,7 +50,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isBypassed]);
 
   return (
     <>
@@ -60,27 +68,30 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
             {/* Elegant Background: Starry/Dust Particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.05)_0%,transparent_70%)]" />
-              {[...Array(20)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  animate={{
-                    y: [0, -100, 0],
-                    opacity: [0, 0.5, 0],
-                    scale: [0, 1, 0]
-                  }}
-                  transition={{
-                    duration: 5 + Math.random() * 5,
-                    repeat: Infinity,
-                    delay: Math.random() * 5,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute w-1 h-1 bg-yellow-400 rounded-full blur-[1px]"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`
-                  }}
-                />
-              ))}
+              {mounted && [...Array(20)].map((_, i) => {
+                const duration = 5 + Math.random() * 5;
+                const delay = Math.random() * 5;
+                const left = `${Math.random() * 100}%`;
+                const top = `${Math.random() * 100}%`;
+                return (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      y: [0, -100, 0],
+                      opacity: [0, 0.5, 0],
+                      scale: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration,
+                      repeat: Infinity,
+                      delay,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute w-1 h-1 bg-yellow-400 rounded-full blur-[1px]"
+                    style={{ left, top }}
+                  />
+                );
+              })}
             </div>
 
             <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col items-center">
@@ -144,6 +155,27 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                   Countdown Module Test <br />
                   <span className="text-white/50 text-xs md:text-sm mt-1 block">Please verify that the countdown is displaying correctly.</span>
                 </p>
+                <input
+                  type="password"
+                  placeholder="Enter secret word..."
+                  className="mt-8 bg-transparent border-b border-yellow-500/30 text-white/70 text-center focus:outline-none focus:border-yellow-500 focus:text-white transition-colors px-4 py-2 font-poppins text-sm w-48"
+                  onChange={(e) => {
+                    if (e.target.value.trim().toLowerCase() === "anushka") {
+                      setIsBypassed(true);
+                      setIsLaunched(true);
+                      setTimeLeft(null);
+                      document.body.style.overflow = "";
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value.trim().toLowerCase() === "anushka") {
+                      setIsBypassed(true);
+                      setIsLaunched(true);
+                      setTimeLeft(null);
+                      document.body.style.overflow = "";
+                    }
+                  }}
+                />
               </motion.div>
             </div>
           </motion.div>

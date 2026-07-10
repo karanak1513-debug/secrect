@@ -6,7 +6,7 @@ import { useStore } from "@/contexts/StoreContext";
 import CinematicButton from "@/components/ui/CinematicButton";
 import confetti from "canvas-confetti";
 
-export default function Screen9_GiftBox() {
+export default function Screen14_GiftBox() {
   const { setCurrentScreen } = useStore();
   const [opened, setOpened] = useState(false);
 
@@ -121,7 +121,7 @@ export default function Screen9_GiftBox() {
                   Always yours.
                 </p>
                 <div className="mt-12">
-                  <CinematicButton onClick={() => setCurrentScreen(10)}>
+                  <CinematicButton onClick={() => setCurrentScreen(15)}>
                     Read My Letter ✨
                   </CinematicButton>
                 </div>

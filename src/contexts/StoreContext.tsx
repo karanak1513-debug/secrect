@@ -15,7 +15,7 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [currentScreen, setCurrentScreen] = useState(1);
-  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(true);
   const [audioVolume, setAudioVolume] = useState(0.5);
 
   return (
