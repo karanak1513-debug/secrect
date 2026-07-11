@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { sfx } from "@/utils/sfx";
 
 export default function Day1_LaserMaze({ onComplete }: { onComplete: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -11,11 +12,11 @@ export default function Day1_LaserMaze({ onComplete }: { onComplete: () => void 
   const [fails, setFails] = useState(0);
 
   useEffect(() => {
-    // Generate some lasers
+    // Generate lasers with varying speeds
     setLasers([
-      { id: 1, top: "25%", duration: 2 },
-      { id: 2, top: "50%", duration: 1.5 },
-      { id: 3, top: "75%", duration: 2.5 },
+      { id: 1, top: "25%", duration: 2.2 },
+      { id: 2, top: "50%", duration: 1.6 },
+      { id: 3, top: "75%", duration: 2.8 },
     ]);
   }, []);
 
@@ -55,8 +56,9 @@ export default function Day1_LaserMaze({ onComplete }: { onComplete: () => void 
           heartRect.bottom > laserRect.top
         ) {
           // Collision!
+          sfx.playError();
           setFails((f) => f + 1);
-          // Reset heart (framer-motion handles DOM position, but we force a re-render or CSS translation reset)
+          // Reset heart
           heartRef.current.style.transform = "translate(0px, 0px)";
           break;
         }
@@ -70,54 +72,66 @@ export default function Day1_LaserMaze({ onComplete }: { onComplete: () => void 
   }, [onComplete]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto p-6">
+    <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto p-6 relative z-10 font-poppins">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6">
-        <h2 className="text-3xl font-playfair text-[#D4AF37] mb-2">Laser Maze</h2>
-        <p className="text-white/60 font-poppins text-sm mb-4">
-          Drag the heart to the safe zone at the top. Don't touch the lasers!
+        <h2 className="text-3xl font-playfair text-[#D4AF37] mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">Laser Maze</h2>
+        <p className="text-white/60 text-sm mb-4">
+          Drag the heart coordinate through the moving security laser sweep to the safe zone.
         </p>
-        {fails > 0 && <p className="text-red-400 text-sm">Hits: {fails}</p>}
+        {fails > 0 && (
+          <motion.p
+            key={fails}
+            initial={{ scale: 1.2, color: "#f87171" }}
+            animate={{ scale: 1, color: "#f87171" }}
+            className="text-red-400 text-xs uppercase tracking-widest font-mono"
+          >
+            Alert: security hits ({fails})
+          </motion.p>
+        )}
       </motion.div>
 
+      {/* Main Glass Grid */}
       <div 
         ref={containerRef}
-        className="relative w-full h-[60vh] max-h-[500px] border-2 border-[#D4AF37]/30 rounded-2xl bg-black overflow-hidden shadow-[0_0_20px_rgba(212,175,55,0.15)] flex flex-col"
+        className="relative w-full h-[55vh] max-h-[460px] border border-white/10 rounded-[32px] bg-black/60 overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl flex flex-col"
       >
         {/* Target Zone */}
-        <div ref={targetRef} className="absolute top-0 left-0 w-full h-20 bg-green-500/10 border-b border-green-500/30 flex items-center justify-center">
-          <span className="text-green-400 font-poppins text-sm tracking-widest">SAFE ZONE</span>
+        <div ref={targetRef} className="absolute top-0 left-0 w-full h-20 bg-green-500/5 border-b border-green-500/10 flex items-center justify-center">
+          <span className="text-green-400 font-mono text-xs tracking-[0.3em] font-semibold animate-pulse">SAFE ZONE</span>
         </div>
 
         {/* Lasers */}
         {lasers.map((laser, index) => (
           <motion.div
             key={laser.id}
-            className="laser-beam absolute left-0 w-32 h-2 bg-red-500 shadow-[0_0_15px_#ef4444] rounded-full"
+            className="laser-beam absolute left-0 w-36 h-2 bg-gradient-to-r from-red-600 via-red-500 to-red-600 shadow-[0_0_15px_#ef4444,0_0_30px_#ef4444] rounded-full"
             style={{ top: laser.top }}
             animate={{
-              x: ["0%", "300%", "0%"],
+              x: ["-20%", "280%", "-20%"],
             }}
             transition={{
               duration: laser.duration,
               repeat: Infinity,
-              ease: "linear",
-              delay: index * 0.5,
+              ease: "easeInOut",
+              delay: index * 0.4,
             }}
           />
         ))}
 
         {/* Draggable Heart */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <motion.div
             ref={heartRef}
             drag
             dragConstraints={containerRef}
             dragElastic={0}
             dragMomentum={false}
-            className="w-12 h-12 flex items-center justify-center text-4xl cursor-grab active:cursor-grabbing drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] z-50 touch-none"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            className="w-14 h-14 flex items-center justify-center text-4xl cursor-grab active:cursor-grabbing z-50 touch-none relative select-none"
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.95 }}
           >
+            {/* Halo pulse */}
+            <div className="absolute inset-0 rounded-full bg-red-500/10 animate-ping pointer-events-none" />
             ❤️
           </motion.div>
         </div>

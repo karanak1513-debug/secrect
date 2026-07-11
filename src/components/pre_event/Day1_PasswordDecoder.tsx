@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { sfx } from "@/utils/sfx";
 
 const SECRET_WORD = "MAGIC";
 const CLUE = "A mysterious force that makes the impossible, possible.";
@@ -21,6 +22,7 @@ export default function Day1_PasswordDecoder({ onComplete }: { onComplete: () =>
     const newGuess = [...guess];
     newGuess[index] = value.toUpperCase();
     setGuess(newGuess);
+    sfx.playClick();
 
     // Auto focus next
     if (value && index < 4) {
@@ -30,6 +32,7 @@ export default function Day1_PasswordDecoder({ onComplete }: { onComplete: () =>
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !guess[index] && index > 0) {
+      sfx.playClick();
       inputRefs.current[index - 1]?.focus();
     }
     if (e.key === "Enter") {
@@ -40,6 +43,7 @@ export default function Day1_PasswordDecoder({ onComplete }: { onComplete: () =>
   const submitGuess = () => {
     const currentGuess = guess.join("");
     if (currentGuess.length < 5) {
+      sfx.playError();
       setErrorMsg("Please fill all letters.");
       return;
     }
@@ -47,6 +51,7 @@ export default function Day1_PasswordDecoder({ onComplete }: { onComplete: () =>
     if (currentGuess === SECRET_WORD) {
       onComplete();
     } else {
+      sfx.playError();
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       if (newAttempts >= MAX_ATTEMPTS) {
@@ -64,54 +69,63 @@ export default function Day1_PasswordDecoder({ onComplete }: { onComplete: () =>
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto p-6">
+    <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto p-6 relative z-10 font-poppins">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
-        <h2 className="text-3xl font-playfair text-[#D4AF37] mb-2">Password Decoder</h2>
-        <p className="text-white/60 font-poppins text-sm mb-6">
-          Decode the hidden word. You have 3 attempts.
+        <h2 className="text-3xl font-playfair text-[#D4AF37] mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">Password Decoder</h2>
+        <p className="text-white/60 text-sm mb-6">
+          Decode the hidden word. Complete within 3 access attempts.
         </p>
-        <div className="bg-white/5 border border-[#D4AF37]/30 p-4 rounded-xl backdrop-blur-md mb-8">
-          <p className="text-[#FFF3B0] font-poppins text-sm italic">
-            Clue: "{CLUE}"
-          </p>
-        </div>
       </motion.div>
 
-      <div className="flex gap-3 mb-8">
-        {guess.map((letter, index) => (
-          <input
-            key={index}
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
-            type="text"
-            maxLength={1}
-            value={letter}
-            onChange={(e) => handleChange(index, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
-            disabled={attempts >= MAX_ATTEMPTS}
-            className="w-12 h-14 bg-black/50 border border-[#D4AF37]/50 text-center text-2xl font-playfair text-[#D4AF37] rounded-lg focus:outline-none focus:border-[#D4AF37] focus:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all uppercase"
-          />
-        ))}
-      </div>
+      {/* Main Glass Decrypter Box */}
+      <div className="glass-card w-full p-8 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.5)] flex flex-col items-center">
+        {/* Clue Banner */}
+        <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 p-5 rounded-2xl backdrop-blur-md mb-8 w-full">
+          <span className="text-[10px] font-mono text-[#D4AF37]/60 block tracking-widest mb-1.5 uppercase">DECRYPTION CLUE</span>
+          <p className="text-[#FFF3B0] font-playfair text-base italic leading-relaxed">
+            "{CLUE}"
+          </p>
+        </div>
 
-      <button
-        onClick={submitGuess}
-        disabled={attempts >= MAX_ATTEMPTS}
-        className="px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-black font-semibold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)] disabled:opacity-50 disabled:hover:scale-100"
-      >
-        Submit
-      </button>
+        {/* Input letters row */}
+        <div className="flex gap-2.5 md:gap-4 mb-8 justify-center">
+          {guess.map((letter, index) => (
+            <motion.input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="text"
+              maxLength={1}
+              value={letter}
+              onChange={(e) => handleChange(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
+              disabled={attempts >= MAX_ATTEMPTS}
+              whileFocus={{ scale: 1.08 }}
+              className="w-11 h-13 md:w-13 md:h-15 bg-black/60 border border-[#D4AF37]/30 text-center text-xl md:text-2xl font-playfair text-[#FFF3B0] rounded-xl focus:outline-none focus:border-[#D4AF37] focus:shadow-[0_0_18px_rgba(212,175,55,0.3)] transition-all uppercase"
+            />
+          ))}
+        </div>
 
-      {errorMsg && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className={`mt-6 font-poppins text-sm ${attempts >= MAX_ATTEMPTS ? "text-red-400" : "text-[#D4AF37]"}`}
+        <button
+          onClick={submitGuess}
+          disabled={attempts >= MAX_ATTEMPTS}
+          className="px-10 py-3.5 bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] text-black font-semibold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] disabled:opacity-50 disabled:hover:scale-100 cursor-pointer text-xs tracking-wider uppercase"
         >
-          {errorMsg}
-        </motion.p>
-      )}
+          Submit Access Code
+        </button>
+
+        {errorMsg && (
+          <motion.p
+            key={errorMsg}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`mt-6 font-mono text-xs uppercase tracking-wider ${attempts >= MAX_ATTEMPTS ? "text-red-400" : "text-[#D4AF37]"}`}
+          >
+            {errorMsg}
+          </motion.p>
+        )}
+      </div>
     </div>
   );
 }
