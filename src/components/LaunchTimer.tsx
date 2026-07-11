@@ -9,6 +9,7 @@ import CountdownLock from "./pre_event/CountdownLock";
 import UnlockCeremony from "./pre_event/UnlockCeremony";
 import Day1_CompletionCountdown from "./pre_event/Day1_CompletionCountdown";
 import Day2_CompletionCountdown from "./pre_event/Day2_CompletionCountdown";
+import GoldenParticles from "./pre_event/GoldenParticles";
 
 const TARGET_DATE = new Date("2026-07-13T13:00:00");
 
@@ -100,6 +101,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
       <AnimatePresence>
         {!isLaunched && (bypassMode || preEventActive) && (
           <div className="fixed inset-0 z-[9999] bg-[#020202] flex items-center justify-center overflow-hidden">
+            <GoldenParticles />
             {/* Developer Bypasses */}
             {bypassMode === "day1" && (
               <Day1_Mission onTimeUp={updatePreEventRoute} onReturnLater={() => setBypassMode(null)} />
@@ -129,7 +131,8 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
         )}
         
         {!isLaunched && !bypassMode && !preEventActive && (
-          <div className="fixed inset-0 z-[9999] bg-[#020202]">
+          <div className="fixed inset-0 z-[9999] bg-[#020202] overflow-hidden">
+            <GoldenParticles />
             <AnimatePresence mode="wait">
               {isTimeLocked ? (
                 /* 1. COUNTDOWN LOCK SCREEN */
