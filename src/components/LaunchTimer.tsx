@@ -10,6 +10,7 @@ import UnlockCeremony from "./pre_event/UnlockCeremony";
 import Day1_CompletionCountdown from "./pre_event/Day1_CompletionCountdown";
 import Day2_CompletionCountdown from "./pre_event/Day2_CompletionCountdown";
 import GoldenParticles from "./pre_event/GoldenParticles";
+import PreEventTransition from "./pre_event/PreEventTransition";
 
 const TARGET_DATE = new Date("2026-07-13T13:00:00");
 
@@ -19,6 +20,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   const { setAppMode } = useStore();
   
   const [preEventActive, setPreEventActive] = useState(false);
+  const [showPreEventTransition, setShowPreEventTransition] = useState(false);
   const [currentPreEventState, setCurrentPreEventState] = useState<"day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown">("day1_playing");
   const [bypassMode, setBypassMode] = useState<"day1" | "day2" | null>(null);
   
@@ -146,7 +148,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                   <CountdownLock 
                     targetDate={TARGET_DATE} 
                     onUnlock={() => {}} 
-                    onEnterPreEvent={() => setPreEventActive(true)}
+                    onEnterPreEvent={() => setShowPreEventTransition(true)}
                   />
                 </motion.div>
               ) : (
@@ -166,6 +168,14 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
               )}
             </AnimatePresence>
           </div>
+        )}
+        {showPreEventTransition && (
+          <PreEventTransition
+            onComplete={() => {
+              setShowPreEventTransition(false);
+              setPreEventActive(true);
+            }}
+          />
         )}
       </AnimatePresence>
     </>
