@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Day1_PatternUnlock from "./Day1_PatternUnlock";
-import Day1_HiddenKey from "./Day1_HiddenKey";
+import Day1_CatchPetals from "./Day1_CatchPetals";
 import Day1_LaserMaze from "./Day1_LaserMaze";
 import Day1_PasswordDecoder from "./Day1_PasswordDecoder";
 import Day1_ReactionChallenge from "./Day1_ReactionChallenge";
@@ -60,7 +60,7 @@ export default function Day1_Mission({ onTimeUp, onReturnLater }: { onTimeUp: ()
         )}
         {step === 2 && (
           <motion.div key="c2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="w-full pb-16">
-            <Day1_HiddenKey onComplete={handleNext} />
+            <Day1_CatchPetals onComplete={handleNext} />
           </motion.div>
         )}
         {step === 3 && (
