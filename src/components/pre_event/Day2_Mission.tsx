@@ -90,8 +90,8 @@ const MISSIONS: Record<number, MissionConfig> = {
 const TOTAL_MISSIONS = 10;
 
 export default function Day2_Mission({ onUnlock }: { onUnlock: () => void }) {
-  const [step, setStep] = useState(0);
-  const [subStep, setSubStep] = useState<"intro" | "playing" | "success">("intro");
+  const [step, setStep] = useState(8);
+  const [subStep, setSubStep] = useState<"intro" | "playing" | "success">("playing");
   const [showCompletion, setShowCompletion] = useState(false);
 
   const handleStartMission = () => setSubStep("playing");
