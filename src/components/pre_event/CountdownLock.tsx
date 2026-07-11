@@ -78,7 +78,7 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
           transition={{ delay: 0.2 }}
           className="text-4xl md:text-5xl font-playfair text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] mb-4 flex items-center justify-center gap-3"
         >
-          <span>🔒</span> Birthday Celebration Locked
+          <span>🔒</span> A Special Surprise Awaits
         </motion.div>
 
         <motion.p
@@ -87,8 +87,8 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
           transition={{ delay: 0.4 }}
           className="text-white/70 font-light text-sm md:text-base leading-relaxed mb-8 max-w-md mx-auto"
         >
-          The celebration hasn't started yet.<br />
-          Every surprise will unlock automatically on<br />
+          The grand birthday celebration is locked in time.<br />
+          Every memory, wish, and little detail will automatically reveal itself on<br />
           <span className="text-[#D4AF37] font-semibold">13 July • 1:00 PM</span>.
         </motion.p>
 
@@ -123,7 +123,7 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
           transition={{ delay: 0.9 }}
           className="text-xs text-white/40 italic mb-8"
         >
-          "Every second brings you closer to something truly special."
+          "Patience makes the sweetest surprises even more beautiful."
         </motion.p>
 
         {showPreEventButton && (
@@ -134,7 +134,7 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
             onClick={handlePreEventClick}
             className="px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-black font-semibold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)] flex items-center gap-2 mx-auto"
           >
-            Continue to Pre-Birthday Event →
+            Enter Pre-Event Missions →
           </motion.button>
         )}
       </motion.div>
