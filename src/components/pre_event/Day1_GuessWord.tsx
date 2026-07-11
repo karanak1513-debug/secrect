@@ -4,22 +4,16 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const TARGET_PHRASE = "I LOVE YOU";
-// Scrambled list of characters (excluding spaces)
-const SCRAMBLED_INITIAL = ["O", "Y", "I", "U", "V", "L", "O", "E"];
+// Scrambled list of characters with decoy letters for confusion
+const SCRAMBLED_INITIAL = ["O", "Y", "I", "U", "V", "L", "O", "E", "A", "K", "M", "R", "S", "H"];
 
 export default function Day1_GuessWord({ onComplete }: { onComplete: () => void }) {
   // We keep track of available letters in the bank
   const [bank, setBank] = useState<{ id: number; char: string }[]>([]);
   // We keep track of letters placed in the answer
-  // "I LOVE YOU" has index maps: 
-  // index 0: 'I'
-  // index 1: space
-  // index 2,3,4,5: 'L','O','V','E'
-  // index 6: space
-  // index 7,8,9: 'Y','O','U'
   const [slots, setSlots] = useState<( { id: number; char: string } | null )[]>([
     null, // I
-    null, // space (handled as special)
+    null, // space
     null, // L
     null, // O
     null, // V
@@ -32,9 +26,10 @@ export default function Day1_GuessWord({ onComplete }: { onComplete: () => void 
   const [error, setError] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // Initialize bank
+  // Initialize and shuffle bank
   useEffect(() => {
-    setBank(SCRAMBLED_INITIAL.map((char, index) => ({ id: index, char })));
+    const shuffled = [...SCRAMBLED_INITIAL].sort(() => Math.random() - 0.5);
+    setBank(shuffled.map((char, index) => ({ id: index, char })));
   }, []);
 
   // Check if answer is correct
@@ -47,7 +42,7 @@ export default function Day1_GuessWord({ onComplete }: { onComplete: () => void 
       })
       .join("");
 
-    if (currentStr.length === TARGET_PHRASE.length) {
+    if (slots.filter((s, idx) => idx !== 1 && idx !== 6 && s !== null).length === 8) {
       if (currentStr === TARGET_PHRASE) {
         setIsCompleted(true);
         setTimeout(onComplete, 1200);
@@ -57,7 +52,8 @@ export default function Day1_GuessWord({ onComplete }: { onComplete: () => void 
         setTimeout(() => {
           // Reset slots and put all letters back to bank
           setSlots([null, null, null, null, null, null, null, null, null, null]);
-          setBank(SCRAMBLED_INITIAL.map((char, index) => ({ id: index, char })));
+          const shuffled = [...SCRAMBLED_INITIAL].sort(() => Math.random() - 0.5);
+          setBank(shuffled.map((char, index) => ({ id: index, char })));
           setError(false);
         }, 1000);
       }
