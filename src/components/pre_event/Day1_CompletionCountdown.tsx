@@ -96,12 +96,24 @@ export default function Day1_CompletionCountdown({ onTimeUp, onReturnLater }: Da
         "Come back when the countdown reaches zero."
       </p>
 
-      <button
-        onClick={onReturnLater}
-        className="px-8 py-3 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-white/80 font-medium rounded-full hover:bg-white/10 hover:text-white transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)]"
-      >
-        Return Later
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={onReturnLater}
+          className="px-8 py-3 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-white/80 font-medium rounded-full hover:bg-white/10 hover:text-white transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+        >
+          Return Later
+        </button>
+        <button
+          onClick={() => {
+            localStorage.removeItem("preEvent_day1_completed");
+            localStorage.removeItem("preEvent_day2_completed");
+            window.location.reload();
+          }}
+          className="px-8 py-3 bg-red-500/10 border border-red-500/25 text-red-400 font-medium rounded-full hover:bg-red-500/20 transition-all text-sm"
+        >
+          Reset Progress
+        </button>
+      </div>
     </div>
   );
 }
