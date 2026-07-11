@@ -7,6 +7,7 @@ import Day1_HiddenKey from "./Day1_HiddenKey";
 import Day1_LaserMaze from "./Day1_LaserMaze";
 import Day1_PasswordDecoder from "./Day1_PasswordDecoder";
 import Day1_ReactionChallenge from "./Day1_ReactionChallenge";
+import Day1_CompletionCountdown from "./Day1_CompletionCountdown";
 
 export default function Day1_Mission() {
   const [step, setStep] = useState(0);
@@ -79,58 +80,7 @@ export default function Day1_Mission() {
         )}
 
         {showCompletion && step === 6 && (
-          <motion.div
-            key="completion"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-            className="text-center z-10 flex flex-col items-center"
-          >
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-6xl mb-6 drop-shadow-[0_0_20px_rgba(212,175,55,0.8)]"
-            >
-              🎉
-            </motion.div>
-            <motion.h2 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="text-3xl md:text-5xl font-playfair text-[#D4AF37] mb-6"
-            >
-              Mission Complete
-            </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="text-white/80 font-poppins mb-8 text-lg"
-            >
-              You discovered the first password fragment.
-            </motion.p>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 2, type: "spring" }}
-              className="bg-black/50 border-2 border-[#D4AF37] px-8 py-4 rounded-2xl shadow-[0_0_40px_rgba(212,175,55,0.3)] mb-10"
-            >
-              <span className="text-4xl md:text-6xl font-mono text-[#FFF3B0] tracking-[0.5em] ml-[0.5em]">
-                H_PP_
-              </span>
-            </motion.div>
-
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 3 }}
-              className="text-[#D4AF37]/70 font-playfair italic text-xl"
-            >
-              "Great job! The next part will be revealed tomorrow."
-            </motion.p>
-          </motion.div>
+          <Day1_CompletionCountdown />
         )}
       </AnimatePresence>
 
