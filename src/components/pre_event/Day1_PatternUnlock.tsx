@@ -52,7 +52,7 @@ export default function Day1_PatternUnlock({ onComplete }: { onComplete: () => v
       >
         <h2 className="text-3xl font-playfair text-[#D4AF37] mb-2">Pattern Unlock</h2>
         <p className="text-white/60 font-poppins text-sm mb-4">
-          Connect the dots in the correct pattern (Hint: Think of the letter 'Z').
+          Connect the dots in the correct sequence to unlock.
         </p>
       </motion.div>
 
