@@ -3,9 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const TARGET_DATE = new Date("2026-07-12T13:00:00");
+const TARGET_DATE = new Date("2026-07-12T00:00:00");
 
-export default function Day1_CompletionCountdown() {
+interface Day1_CompletionCountdownProps {
+  onTimeUp: () => void;
+  onReturnLater: () => void;
+}
+
+export default function Day1_CompletionCountdown({ onTimeUp, onReturnLater }: Day1_CompletionCountdownProps) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isTimeLocked, setIsTimeLocked] = useState(true);
 
@@ -24,6 +29,7 @@ export default function Day1_CompletionCountdown() {
         });
       } else {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        onTimeUp();
       }
     };
 
@@ -31,17 +37,18 @@ export default function Day1_CompletionCountdown() {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [onTimeUp]);
 
   return (
     <div className="text-center z-10 flex flex-col items-center max-w-2xl mx-auto px-6 relative">
       <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08)_0%,transparent_70%)] pointer-events-none" />
 
       <h1 className="text-4xl md:text-5xl font-playfair text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] mb-2 animate-pulse">
-        🎉 Mission Complete
+        Mission Day One Complete!
       </h1>
       <p className="text-white/60 text-sm md:text-base font-light mb-8">
-        "You've successfully completed the Day 1 challenges."
+        "You've successfully completed today's mission.<br />
+        The next mission unlocks tomorrow."
       </p>
 
       {/* Premium Reward Card */}
@@ -59,7 +66,7 @@ export default function Day1_CompletionCountdown() {
         </span>
         <p className="text-white/50 text-xs md:text-sm leading-relaxed font-light">
           Great job! The next mission will unlock automatically on<br />
-          <span className="text-[#D4AF37] font-semibold">12 July at 1:00 PM</span>.
+          <span className="text-[#D4AF37] font-semibold">12 July at 12:00 AM</span>.
         </p>
       </motion.div>
 
@@ -85,12 +92,16 @@ export default function Day1_CompletionCountdown() {
         ))}
       </div>
 
-      <p className="text-white/50 text-sm italic font-light mb-1">
-        "Every second brings you closer to the final part."
+      <p className="text-white/50 text-sm italic font-light mb-8">
+        "Come back when the countdown reaches zero."
       </p>
-      <p className="text-white/40 text-xs font-light">
-        See you on 12 July at exactly 1:00 PM.
-      </p>
+
+      <button
+        onClick={onReturnLater}
+        className="px-8 py-3 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-white/80 font-medium rounded-full hover:bg-white/10 hover:text-white transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+      >
+        Return Later
+      </button>
     </div>
   );
 }

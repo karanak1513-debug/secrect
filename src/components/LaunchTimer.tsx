@@ -7,6 +7,8 @@ import Day1_Mission from "./pre_event/Day1_Mission";
 import Day2_Mission from "./pre_event/Day2_Mission";
 import CountdownLock from "./pre_event/CountdownLock";
 import UnlockCeremony from "./pre_event/UnlockCeremony";
+import Day1_CompletionCountdown from "./pre_event/Day1_CompletionCountdown";
+import Day2_CompletionCountdown from "./pre_event/Day2_CompletionCountdown";
 
 const TARGET_DATE = new Date("2026-07-13T13:00:00");
 
@@ -15,11 +17,31 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   const [mounted, setMounted] = useState(false);
   const { setAppMode } = useStore();
   
-  const [preEventType, setPreEventType] = useState<"day1" | "day2" | "none">("none");
+  const [preEventActive, setPreEventActive] = useState(false);
+  const [currentPreEventState, setCurrentPreEventState] = useState<"day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown">("day1_playing");
+  const [bypassMode, setBypassMode] = useState<"day1" | "day2" | null>(null);
+  
   const [isTimeLocked, setIsTimeLocked] = useState(true);
   const [initialUnlocked, setInitialUnlocked] = useState(false);
   
   const wasLockedRef = useRef(true);
+
+  const updatePreEventRoute = () => {
+    const day1Completed = localStorage.getItem("preEvent_day1_completed") === "true";
+    const day2Completed = localStorage.getItem("preEvent_day2_completed") === "true";
+    const now = new Date();
+    const targetDay2Date = new Date("2026-07-12T00:00:00");
+
+    if (!day1Completed) {
+      setCurrentPreEventState("day1_playing");
+    } else if (now < targetDay2Date) {
+      setCurrentPreEventState("day1_countdown");
+    } else if (!day2Completed) {
+      setCurrentPreEventState("day2_playing");
+    } else {
+      setCurrentPreEventState("day2_countdown");
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -30,12 +52,15 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
     setIsTimeLocked(initialLock);
     setInitialUnlocked(!initialLock);
     wasLockedRef.current = initialLock;
+    
+    updatePreEventRoute();
 
     // Real-time security tick (updates every second)
     const interval = setInterval(() => {
       const now = new Date();
       const currentLock = now < TARGET_DATE;
       setIsTimeLocked(currentLock);
+      updatePreEventRoute();
 
       if (wasLockedRef.current && !currentLock) {
         wasLockedRef.current = false;
@@ -73,15 +98,37 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
       </div>
       
       <AnimatePresence>
-        {!isLaunched && preEventType === "day1" && (
-          <Day1_Mission />
+        {!isLaunched && (bypassMode || preEventActive) && (
+          <div className="fixed inset-0 z-[9999] bg-[#020202] flex items-center justify-center overflow-hidden">
+            {/* Developer Bypasses */}
+            {bypassMode === "day1" && (
+              <Day1_Mission onTimeUp={updatePreEventRoute} onReturnLater={() => setBypassMode(null)} />
+            )}
+            {bypassMode === "day2" && (
+              <Day2_Mission onUnlock={handlePreEventUnlock} />
+            )}
+
+            {/* Standard Sequential Pre-Event Flow */}
+            {!bypassMode && preEventActive && (
+              <>
+                {currentPreEventState === "day1_playing" && (
+                  <Day1_Mission onTimeUp={updatePreEventRoute} onReturnLater={() => setPreEventActive(false)} />
+                )}
+                {currentPreEventState === "day1_countdown" && (
+                  <Day1_CompletionCountdown onTimeUp={updatePreEventRoute} onReturnLater={() => setPreEventActive(false)} />
+                )}
+                {currentPreEventState === "day2_playing" && (
+                  <Day2_Mission onUnlock={handlePreEventUnlock} />
+                )}
+                {currentPreEventState === "day2_countdown" && (
+                  <Day2_CompletionCountdown onUnlock={handlePreEventUnlock} />
+                )}
+              </>
+            )}
+          </div>
         )}
         
-        {!isLaunched && preEventType === "day2" && (
-          <Day2_Mission onUnlock={handlePreEventUnlock} />
-        )}
-        
-        {!isLaunched && preEventType === "none" && (
+        {!isLaunched && !bypassMode && !preEventActive && (
           <div className="fixed inset-0 z-[9999] bg-[#020202]">
             <AnimatePresence mode="wait">
               {isTimeLocked ? (
@@ -96,7 +143,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                   <CountdownLock 
                     targetDate={TARGET_DATE} 
                     onUnlock={() => {}} 
-                    onEnterPreEvent={(day) => setPreEventType(day)}
+                    onEnterPreEvent={() => setPreEventActive(true)}
                   />
                 </motion.div>
               ) : (

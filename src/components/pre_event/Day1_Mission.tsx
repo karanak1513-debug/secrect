@@ -9,7 +9,7 @@ import Day1_PasswordDecoder from "./Day1_PasswordDecoder";
 import Day1_ReactionChallenge from "./Day1_ReactionChallenge";
 import Day1_CompletionCountdown from "./Day1_CompletionCountdown";
 
-export default function Day1_Mission() {
+export default function Day1_Mission({ onTimeUp, onReturnLater }: { onTimeUp: () => void; onReturnLater: () => void }) {
   const [step, setStep] = useState(0);
   const [showCompletion, setShowCompletion] = useState(false);
 
@@ -80,7 +80,7 @@ export default function Day1_Mission() {
         )}
 
         {showCompletion && step === 6 && (
-          <Day1_CompletionCountdown />
+          <Day1_CompletionCountdown onTimeUp={onTimeUp} onReturnLater={onReturnLater} />
         )}
       </AnimatePresence>
 
