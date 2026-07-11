@@ -32,24 +32,17 @@ export default function Day2_WordHunt({ onComplete }: { onComplete: () => void }
   const [grid, setGrid] = useState<string[][]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmed, setConfirmed] = useState<Set<string>>(new Set());
-  const [timeLeft, setTimeLeft] = useState(45);
   const [started, setStarted] = useState(false);
-  const [failed, setFailed] = useState(false);
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => { setGrid(makeWordGrid(word)); }, [word]);
 
-  useEffect(() => {
-    if (!started || failed) return;
-    if (timeLeft <= 0) { setFailed(true); return; }
-    const t = setInterval(() => setTimeLeft(p => p - 1), 1000);
-    return () => clearInterval(t);
-  }, [started, timeLeft, failed]);
+
 
   const getKey = (r: number, c: number) => `${r}-${c}`;
 
   const toggleCell = (r: number, c: number) => {
-    if (!started || failed) return;
+    if (!started) return;
     const k = getKey(r, c);
     setSelected(prev => {
       const n = new Set(prev);
@@ -74,7 +67,7 @@ export default function Day2_WordHunt({ onComplete }: { onComplete: () => void }
     }
   };
 
-  const timerColor = timeLeft > 25 ? "#D4AF37" : timeLeft > 12 ? "#f97316" : "#ef4444";
+
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-5 relative z-10 font-poppins">
@@ -91,22 +84,9 @@ export default function Day2_WordHunt({ onComplete }: { onComplete: () => void }
             Start Hunt
           </button>
         </div>
-      ) : failed ? (
-        <div className="glass-card w-full p-8 border border-red-500/30 flex flex-col items-center gap-4">
-          <span className="text-4xl">❌</span>
-          <p className="text-red-400 font-mono text-sm">TIME EXPIRED</p>
-          <button onClick={() => { setFailed(false); setTimeLeft(45); setSelected(new Set()); setConfirmed(new Set()); setGrid(makeWordGrid(word)); }}
-            className="px-8 py-3 bg-red-500/20 border border-red-500/40 text-red-300 rounded-full text-xs tracking-widest uppercase cursor-pointer">
-            Retry
-          </button>
-        </div>
       ) : (
         <div className="glass-card w-full p-5 border border-white/10 flex flex-col items-center gap-4">
-          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-            <motion.div className="h-full rounded-full" animate={{ width: `${(timeLeft / 45) * 100}%` }} style={{ backgroundColor: timerColor }} />
-          </div>
           <div className="flex justify-between w-full text-xs font-mono">
-            <span style={{ color: timerColor }}>{timeLeft}s</span>
             <span className="text-white/50">Find: <span className="text-[#D4AF37] font-bold tracking-widest">{word}</span></span>
             <span className="text-white/40">{selected.size} selected</span>
           </div>

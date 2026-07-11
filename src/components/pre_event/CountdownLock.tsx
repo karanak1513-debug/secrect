@@ -56,17 +56,7 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
       onEnterPreEvent("day1");
       return;
     }
-    const now = new Date();
-    const isJuly11 = now.getMonth() === 6 && now.getDate() === 11;
-    const isJuly12 = now.getMonth() === 6 && now.getDate() === 12;
-
-    if (isJuly11) {
-      onEnterPreEvent("day1");
-    } else if (isJuly12) {
-      onEnterPreEvent("day2");
-    } else {
-      onEnterPreEvent("day1");
-    }
+    onEnterPreEvent("day2");
   };
 
   const getPreEventButtonStatus = () => {

@@ -34,13 +34,9 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   const updatePreEventRoute = () => {
     const day1Completed = localStorage.getItem("preEvent_day1_completed") === "true";
     const day2Completed = localStorage.getItem("preEvent_day2_completed") === "true";
-    const now = new Date();
-    const targetDay2Date = new Date("2026-07-12T00:00:00");
 
     if (!day1Completed) {
       setCurrentPreEventState("day1_playing");
-    } else if (now < targetDay2Date) {
-      setCurrentPreEventState("day1_countdown");
     } else if (!day2Completed) {
       setCurrentPreEventState("day2_playing");
     } else {
@@ -120,9 +116,14 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
             className="fixed inset-0 z-[9999] bg-[#020202] flex items-center justify-center overflow-hidden"
           >
             <GoldenParticles />
-            {/* Developer Bypasses */}
             {bypassMode === "day1" && (
-              <Day1_Mission onTimeUp={updatePreEventRoute} onReturnLater={() => setBypassMode(null)} />
+              <Day1_Mission 
+                onTimeUp={() => { 
+                  setBypassMode(null); 
+                  updatePreEventRoute(); 
+                }} 
+                onReturnLater={() => setBypassMode(null)} 
+              />
             )}
             {bypassMode === "day2" && (
               <Day2_Mission onUnlock={handlePreEventUnlock} />
@@ -135,7 +136,13 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                   <Day1_Mission onTimeUp={updatePreEventRoute} onReturnLater={() => setPreEventActive(false)} />
                 )}
                 {currentPreEventState === "day1_countdown" && (
-                  <Day1_CompletionCountdown onTimeUp={updatePreEventRoute} onReturnLater={() => setPreEventActive(false)} />
+                  <Day1_CompletionCountdown 
+                    onTimeUp={() => { 
+                      setBypassMode(null); 
+                      updatePreEventRoute(); 
+                    }} 
+                    onReturnLater={() => setPreEventActive(false)} 
+                  />
                 )}
                 {currentPreEventState === "day2_playing" && (
                   <Day2_Mission onUnlock={handlePreEventUnlock} />
