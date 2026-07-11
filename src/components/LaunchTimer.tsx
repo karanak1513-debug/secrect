@@ -102,7 +102,13 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
       
       <AnimatePresence>
         {!isLaunched && (bypassMode || preEventActive) && (
-          <div className="fixed inset-0 z-[9999] bg-[#020202] flex items-center justify-center overflow-hidden">
+          <motion.div 
+            key="pre-event-flow"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] bg-[#020202] flex items-center justify-center overflow-hidden"
+          >
             <GoldenParticles />
             {/* Developer Bypasses */}
             {bypassMode === "day1" && (
@@ -129,11 +135,17 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                 )}
               </>
             )}
-          </div>
+          </motion.div>
         )}
         
         {!isLaunched && !bypassMode && !preEventActive && (
-          <div className="fixed inset-0 z-[9999] bg-[#020202] overflow-hidden">
+          <motion.div 
+            key="lock-flow"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] bg-[#020202] overflow-hidden"
+          >
             <GoldenParticles />
             <AnimatePresence mode="wait">
               {isTimeLocked ? (
@@ -167,10 +179,11 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
         )}
         {showPreEventTransition && (
           <PreEventTransition
+            key="pre-event-transition"
             onComplete={() => {
               setShowPreEventTransition(false);
               setPreEventActive(true);
