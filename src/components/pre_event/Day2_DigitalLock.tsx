@@ -8,7 +8,7 @@ export default function Day2_DigitalLock({ onComplete }: { onComplete: () => voi
   const [position, setPosition] = useState(0);
   const [direction, setDirection] = useState(1);
   const [error, setError] = useState(false);
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number | undefined>(undefined);
   
   // Game parameters based on difficulty (pinsUnlocked)
   const speed = 2 + (pinsUnlocked * 1.5); 
