@@ -170,8 +170,8 @@ export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () =>
               <span className="text-[#D4AF37] font-semibold text-lg md:text-xl flex items-center gap-2 font-playfair">
                 🏆 Celebration Core Decoded
               </span>
-              <span className="text-4xl md:text-5xl font-mono text-white tracking-[0.3em] font-bold drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] my-3 select-none">
-                HAPPY
+              <span className="text-xs md:text-sm font-mono text-white tracking-[0.05em] font-bold drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] my-3 select-none text-center break-words max-w-full uppercase">
+                NHI BTAUNGA BETA SABAR KRO HAHAHHAHAH
               </span>
               <p className="text-white/60 text-xs md:text-sm leading-relaxed font-light">
                 The full authentication sequence is complete.<br />
