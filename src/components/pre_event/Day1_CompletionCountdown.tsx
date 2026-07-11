@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sfx } from "@/utils/sfx";
 
+import { TEST_MODE } from "@/config";
+
 const TARGET_DATE = new Date("2026-07-12T00:00:00");
 
 interface Day1_CompletionCountdownProps {
@@ -16,6 +18,12 @@ export default function Day1_CompletionCountdown({ onTimeUp, onReturnLater }: Da
   const [isTimeLocked, setIsTimeLocked] = useState(true);
 
   useEffect(() => {
+    if (TEST_MODE) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      setIsTimeLocked(false);
+      return;
+    }
+
     const calculateTimeLeft = () => {
       const difference = +TARGET_DATE - +new Date();
       const currentLock = difference > 0;

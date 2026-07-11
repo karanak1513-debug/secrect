@@ -33,6 +33,9 @@ import Screen1_FamilyWelcome from "@/components/family_screens/Screen1_FamilyWel
 import Screen2_FamilyWishes from "@/components/family_screens/Screen2_FamilyWishes";
 import Screen3_FamilyLuckyWheel from "@/components/family_screens/Screen3_FamilyLuckyWheel";
 import Screen4_FamilyBirthdayCard from "@/components/family_screens/Screen4_FamilyBirthdayCard";
+import Screen5_FamilyTrivia from "@/components/family_screens/Screen5_FamilyTrivia";
+import Screen6_FamilyScrapbook from "@/components/family_screens/Screen6_FamilyScrapbook";
+import Screen7_FamilySoundboard from "@/components/family_screens/Screen7_FamilySoundboard";
 
 export default function Home() {
   const { currentScreen, appMode } = useStore();
@@ -94,7 +97,10 @@ export default function Home() {
           {currentScreen === 1 && <Screen1_FamilyWelcome />}
           {currentScreen === 2 && <Screen2_FamilyWishes />}
           {currentScreen === 3 && <Screen3_FamilyLuckyWheel />}
-          {currentScreen === 4 && <Screen4_FamilyBirthdayCard />}
+          {currentScreen === 4 && <Screen5_FamilyTrivia />}
+          {currentScreen === 5 && <Screen6_FamilyScrapbook />}
+          {currentScreen === 6 && <Screen7_FamilySoundboard />}
+          {currentScreen === 7 && <Screen4_FamilyBirthdayCard />}
         </>
       )}
 
@@ -106,7 +112,7 @@ export default function Home() {
 function ProgressIndicator() {
   const { currentScreen, appMode } = useStore();
   
-  const totalScreens = appMode === "family" ? 4 : 21;
+  const totalScreens = appMode === "family" ? 7 : 21;
   
   if (currentScreen === 1 || currentScreen === totalScreens) return null;
 

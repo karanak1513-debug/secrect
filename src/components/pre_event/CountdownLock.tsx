@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sfx } from "@/utils/sfx";
 
+import { TEST_MODE } from "@/config";
+
 interface CountdownLockProps {
   targetDate: Date;
   onUnlock: () => void;
@@ -16,6 +18,12 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
   const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
+    if (TEST_MODE) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      setIsReady(true);
+      return;
+    }
+
     const calculateTimeLeft = () => {
       const difference = +targetDate - +new Date();
       if (difference <= 0) {
@@ -44,6 +52,10 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
 
   const handlePreEventClick = () => {
     sfx.playTransition();
+    if (TEST_MODE) {
+      onEnterPreEvent("day1");
+      return;
+    }
     const now = new Date();
     const isJuly11 = now.getMonth() === 6 && now.getDate() === 11;
     const isJuly12 = now.getMonth() === 6 && now.getDate() === 12;
@@ -53,12 +65,12 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
     } else if (isJuly12) {
       onEnterPreEvent("day2");
     } else {
-      // Fallback fallback if user is playing out of days but has bypasses/needs to test
       onEnterPreEvent("day1");
     }
   };
 
   const getPreEventButtonStatus = () => {
+    if (TEST_MODE) return true;
     const now = new Date();
     const isJuly11 = now.getMonth() === 6 && now.getDate() === 11;
     const isJuly12 = now.getMonth() === 6 && now.getDate() === 12;

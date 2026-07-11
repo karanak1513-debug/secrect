@@ -22,23 +22,23 @@ export default function Screen1_FamilyWelcome() {
           transition={{ delay: 0.3, duration: 1 }}
           className="text-3xl md:text-5xl font-playfair font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] mb-8"
         >
-          Welcome to Anushka's Birthday Celebration 🎉
+          Welcome to Your Birthday Sanctuary, Anushka ❤️
         </motion.h1>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 1 }}
-          className="space-y-6 text-white/80 font-poppins text-sm md:text-base font-light leading-relaxed mb-12"
+          className="space-y-6 text-white/85 font-poppins text-sm md:text-base font-light leading-relaxed mb-12"
         >
           <p>
-            Thank you for visiting this special birthday website.
+            Step inside a space created entirely with love, laughter, and memories just for you.
           </p>
           <p>
-            This little celebration has been created with lots of love to make Anushka's birthday even more memorable.
+            This is a collection of our warmest wishes, shared family jokes, and little tokens of how much you mean to us.
           </p>
           <p>
-            We hope this journey brings a smile to your face and reminds you of all the wonderful memories she has created over the years.
+            Let's take a journey through your special day, spin for gifts, and celebrate the wonderful person you are. We hope it brings a big smile to your face!
           </p>
         </motion.div>
 

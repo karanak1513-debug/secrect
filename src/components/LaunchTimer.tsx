@@ -11,6 +11,8 @@ import Day1_CompletionCountdown from "./pre_event/Day1_CompletionCountdown";
 import Day2_CompletionCountdown from "./pre_event/Day2_CompletionCountdown";
 import GoldenParticles from "./pre_event/GoldenParticles";
 import PreEventTransition from "./pre_event/PreEventTransition";
+import { TEST_MODE } from "@/config";
+import { sfx } from "@/utils/sfx";
 
 const TARGET_DATE = new Date("2026-07-13T13:00:00");
 
@@ -49,6 +51,14 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   useEffect(() => {
     setMounted(true);
     document.body.style.overflow = "hidden";
+
+    if (TEST_MODE) {
+      // In TEST_MODE, start with unlocked ceremony bypassed, and ignore checks
+      setIsTimeLocked(false);
+      setInitialUnlocked(true);
+      updatePreEventRoute();
+      return;
+    }
 
     // Initial check
     const initialLock = new Date() < TARGET_DATE;
@@ -191,6 +201,174 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
           />
         )}
       </AnimatePresence>
+
+      {TEST_MODE && (
+        <DevTestPanel
+          isLaunched={isLaunched}
+          setIsLaunched={setIsLaunched}
+          preEventActive={preEventActive}
+          setPreEventActive={setPreEventActive}
+          bypassMode={bypassMode}
+          setBypassMode={setBypassMode}
+          currentPreEventState={currentPreEventState}
+          setCurrentPreEventState={setCurrentPreEventState}
+          isTimeLocked={isTimeLocked}
+          setIsTimeLocked={setIsTimeLocked}
+        />
+      )}
     </>
+  );
+}
+
+function DevTestPanel({
+  isLaunched,
+  setIsLaunched,
+  preEventActive,
+  setPreEventActive,
+  bypassMode,
+  setBypassMode,
+  currentPreEventState,
+  setCurrentPreEventState,
+  isTimeLocked,
+  setIsTimeLocked,
+}: {
+  isLaunched: boolean;
+  setIsLaunched: (v: boolean) => void;
+  preEventActive: boolean;
+  setPreEventActive: (v: boolean) => void;
+  bypassMode: "day1" | "day2" | null;
+  setBypassMode: (v: "day1" | "day2" | null) => void;
+  currentPreEventState: "day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown";
+  setCurrentPreEventState: (v: "day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown") => void;
+  isTimeLocked: boolean;
+  setIsTimeLocked: (v: boolean) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { setAppMode } = useStore();
+
+  const selectFlow = (flow: string) => {
+    sfx.playClick();
+    if (flow === "lock_screen") {
+      setIsLaunched(false);
+      setPreEventActive(false);
+      setBypassMode(null);
+      setIsTimeLocked(true);
+    } else if (flow === "day1_mission") {
+      setIsLaunched(false);
+      setPreEventActive(true);
+      setBypassMode("day1");
+      setCurrentPreEventState("day1_playing");
+      setIsTimeLocked(true);
+    } else if (flow === "day1_completed") {
+      setIsLaunched(false);
+      setPreEventActive(true);
+      setBypassMode(null);
+      setCurrentPreEventState("day1_countdown");
+      setIsTimeLocked(true);
+    } else if (flow === "day2_mission") {
+      setIsLaunched(false);
+      setPreEventActive(true);
+      setBypassMode("day2");
+      setCurrentPreEventState("day2_playing");
+      setIsTimeLocked(true);
+    } else if (flow === "day2_completed") {
+      setIsLaunched(false);
+      setPreEventActive(true);
+      setBypassMode(null);
+      setCurrentPreEventState("day2_countdown");
+      setIsTimeLocked(true);
+    } else if (flow === "ceremony") {
+      setIsLaunched(false);
+      setPreEventActive(false);
+      setBypassMode(null);
+      setIsTimeLocked(false);
+    } else if (flow === "app_private") {
+      setAppMode("private");
+      setIsLaunched(true);
+      setPreEventActive(false);
+    } else if (flow === "app_family") {
+      setAppMode("family");
+      setIsLaunched(true);
+      setPreEventActive(false);
+    }
+  };
+
+  return (
+    <div className="fixed bottom-6 right-6 z-[99999] flex flex-col items-end gap-3 font-mono text-[11px]">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 10 }}
+            className="bg-black/90 backdrop-blur-xl p-5 rounded-2xl border border-[#D4AF37]/35 shadow-[0_10px_30px_rgba(0,0,0,0.8)] w-60 flex flex-col gap-3.5 text-left"
+          >
+            <div className="text-[#D4AF37] font-bold border-b border-[#D4AF37]/25 pb-1 flex justify-between items-center">
+              <span>🛠️ DEV TEST PANEL</span>
+              <span className="text-[9px] text-green-400 font-bold bg-green-500/10 px-1.5 py-0.5 rounded">ACTIVE</span>
+            </div>
+            
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[9px] text-white/40 tracking-wider font-semibold uppercase">TIMELINES</span>
+              {[
+                { id: "lock_screen", label: "Countdown Lock Screen" },
+                { id: "day1_mission", label: "Day 1 Mission" },
+                { id: "day1_completed", label: "Day 1 Complete" },
+                { id: "day2_mission", label: "Day 2 Mission" },
+                { id: "day2_completed", label: "Day 2 Complete" },
+                { id: "ceremony", label: "Unlock Ceremony" },
+              ].map((btn) => (
+                <button
+                  key={btn.id}
+                  onClick={() => selectFlow(btn.id)}
+                  className="px-2.5 py-1 rounded bg-white/5 border border-white/10 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 text-white/80 hover:text-white transition-all text-left cursor-pointer"
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[9px] text-white/40 tracking-wider font-semibold uppercase">LAUNCH APPS</span>
+              {[
+                { id: "app_private", label: "Launch Private Mode" },
+                { id: "app_family", label: "Launch Family Mode" },
+              ].map((btn) => (
+                <button
+                  key={btn.id}
+                  onClick={() => selectFlow(btn.id)}
+                  className="px-2.5 py-1 rounded bg-[#D4AF37]/10 border border-[#D4AF37]/20 hover:border-[#D4AF37]/55 hover:bg-[#D4AF37]/15 text-[#FFF3B0] transition-all text-left cursor-pointer"
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                sfx.playClick();
+                localStorage.clear();
+                window.location.reload();
+              }}
+              className="px-2.5 py-1 rounded bg-red-950/40 border border-red-500/20 hover:border-red-500/50 hover:bg-red-950/60 text-red-400 transition-all text-center cursor-pointer font-bold uppercase text-[9px]"
+            >
+              Clear Progress
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.button
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.92 }}
+        onClick={() => {
+          sfx.playClick();
+          setIsOpen(!isOpen);
+        }}
+        className="w-12 h-12 bg-black/80 border border-[#D4AF37]/35 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.3)] cursor-pointer text-xl select-none"
+      >
+        ⚙️
+      </motion.button>
+    </div>
   );
 }

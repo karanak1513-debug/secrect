@@ -114,10 +114,10 @@ export default function Screen3_FamilyLuckyWheel() {
         <motion.h2 
           className="text-3xl md:text-5xl font-playfair font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] mb-4 text-center"
         >
-          Birthday Lucky Wheel
+          Birthday Lucky Wheel 🎡
         </motion.h2>
         <p className="text-white/70 mb-12 text-center text-sm md:text-base font-light">
-          Spin the wheel for a special birthday surprise!
+          Wheel ko spin karein aur apna special birthday surprise jeetein!
         </p>
 
         <div className="relative w-72 h-72 md:w-96 md:h-96 mb-12">
@@ -130,11 +130,12 @@ export default function Screen3_FamilyLuckyWheel() {
               animate={{ rotate: rotation }}
               transition={{ duration: 5, ease: [0.15, 0.85, 0.25, 1] }}
             >
+              {/* Slice Background Sectors */}
               {REWARDS.map((reward, index) => {
                 const angle = (360 / REWARDS.length) * index;
                 return (
                   <div
-                    key={index}
+                    key={`slice-${index}`}
                     className="absolute w-full h-full flex justify-center origin-center"
                     style={{ transform: `rotate(${angle}deg)` }}
                   >
@@ -142,39 +143,34 @@ export default function Screen3_FamilyLuckyWheel() {
                       className="absolute top-0 w-1/2 h-[50%] origin-bottom flex justify-center pt-4"
                       style={{
                         transform: `rotate(${360 / REWARDS.length / 2}deg) skewY(${90 - (360 / REWARDS.length)}deg)`,
-                        backgroundColor: index % 2 === 0 ? 'rgba(212,175,55,0.1)' : 'rgba(212,175,55,0.2)',
-                        borderRight: '1px solid rgba(212,175,55,0.3)',
+                        backgroundColor: index % 2 === 0 ? '#0c0c0c' : '#141414',
+                        borderRight: '1px solid rgba(212,175,55,0.15)',
                         left: '50%',
                       }}
                     />
-                    <div 
-                      className="absolute top-4 text-[10px] md:text-xs font-semibold text-white/90 whitespace-nowrap z-10 font-poppins drop-shadow-md"
-                      style={{
-                        transform: `rotate(${180}deg) translateY(-20px)`, // Just trying to position text properly
-                        writingMode: 'vertical-rl',
-                      }}
-                    >
-                      {reward.split(' ')[0]} {/* Show emoji and maybe first word, actually let's try to fit it nicely */}
-                    </div>
                   </div>
                 );
               })}
               
-              {/* Better text positioning for the wheel slices */}
+              {/* Slices Labels (Only emojis, clean minimalist look) */}
               {REWARDS.map((reward, index) => {
-                const angle = (360 / REWARDS.length) * index;
+                const segmentAngle = 360 / REWARDS.length;
+                const angle = (segmentAngle * index) + (segmentAngle / 2);
+                const emoji = reward.split(' ')[0];
+
                 return (
                   <div
-                    key={`text-${index}`}
-                    className="absolute top-0 left-0 w-full h-full flex justify-center items-start"
+                    key={`label-${index}`}
+                    className="absolute top-0 left-0 w-full h-full flex justify-center items-start origin-center pointer-events-none"
                     style={{ transform: `rotate(${angle}deg)` }}
                   >
-                    <span className="mt-8 text-xs md:text-sm font-semibold text-white/80 z-20 text-center w-24 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] leading-tight flex flex-col items-center">
-                      <span className="text-xl md:text-2xl mb-1">{reward.split(' ')[0]}</span>
-                      {reward.split(' ').slice(1).join(' ')}
-                    </span>
+                    <div className="mt-10 md:mt-14 flex flex-col items-center text-center">
+                      <span className="text-3xl md:text-4xl filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] select-none">
+                        {emoji}
+                      </span>
+                    </div>
                   </div>
-                )
+                );
               })}
 
               {/* Center Dot */}

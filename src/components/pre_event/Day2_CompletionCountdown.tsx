@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sfx } from "@/utils/sfx";
 
+import { TEST_MODE } from "@/config";
+
 const TARGET_DATE = new Date("2026-07-13T13:00:00");
 
 export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () => void }) {
@@ -14,6 +16,12 @@ export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () =>
   const wasLockedRef = useRef(true);
 
   useEffect(() => {
+    if (TEST_MODE) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      setIsTimeLocked(false);
+      return;
+    }
+
     const calculateTimeLeft = () => {
       const difference = +TARGET_DATE - +new Date();
       const currentLock = difference > 0;
@@ -44,7 +52,7 @@ export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () =>
   }, []);
 
   const handleEnterClick = () => {
-    if (isTimeLocked) {
+    if (isTimeLocked && !TEST_MODE) {
       sfx.playError();
       setShowNotYet(true);
       setTimeout(() => setShowNotYet(false), 3000);
@@ -59,53 +67,24 @@ export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () =>
       {/* Background Glow */}
       <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-      {/* Confetti Explosion (when unlocked) */}
+      {/* Floating hearts (when unlocked) */}
       {(justUnlocked || !isTimeLocked) && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-50">
-          {[...Array(80)].map((_, i) => (
-            <motion.div
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+          {["❤️","🩷","💛","🤍","❤️","💕","🩷","💛","🤍","💕"].map((h, i) => (
+            <motion.span
               key={i}
-              className="absolute w-2.5 h-4.5 rounded-sm"
-              initial={{ top: "-10%", left: `${Math.random() * 100}%`, rotate: 0 }}
-              animate={{ 
-                top: "110%", 
-                left: `${Math.random() * 100}%`,
-                rotate: 360,
-                opacity: [1, 1, 0]
-              }}
-              transition={{ 
-                duration: 2.2 + Math.random() * 3, 
-                repeat: Infinity,
-                ease: "linear"
-              }}
-              style={{ backgroundColor: i % 2 === 0 ? "#D4AF37" : "#FFF3B0" }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Simulated Fireworks (when unlocked) */}
-      {(justUnlocked || !isTimeLocked) && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-40">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={`fw-${i}`}
-              className="absolute w-2 h-2 bg-yellow-400 rounded-full"
-              initial={{ scale: 0, opacity: 1, left: `${15 + Math.random() * 70}%`, top: `${15 + Math.random() * 50}%` }}
-              animate={{
-                scale: [0, 20, 0],
-                opacity: [1, 0.9, 0],
-              }}
+              className="absolute text-2xl"
+              initial={{ bottom: "-10%", left: `${8 + i * 9}%`, opacity: 0 }}
+              animate={{ bottom: "110%", opacity: [0, 0.8, 0.8, 0] }}
               transition={{
-                duration: 1.6,
+                duration: 4 + (i % 3),
                 repeat: Infinity,
-                delay: i * 0.4,
-                ease: "easeOut"
+                delay: i * 0.6,
+                ease: "easeInOut"
               }}
-              style={{
-                boxShadow: "0 0 25px 6px #D4AF37, 0 0 50px 12px #FFF3B0, 0 0 75px 18px rgba(255,255,255,0.4)",
-              }}
-            />
+            >
+              {h}
+            </motion.span>
           ))}
         </div>
       )}
@@ -115,32 +94,82 @@ export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () =>
           /* UNLOCKED STATE */
           <motion.div
             key="unlocked"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-6"
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center gap-5 text-center max-w-sm w-full relative z-20"
           >
+            {/* Pulsing heart */}
             <motion.div
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-8xl drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]"
+              animate={{ scale: [1, 1.2, 1], filter: ["drop-shadow(0 0 8px #D4AF37)", "drop-shadow(0 0 20px #D4AF37)", "drop-shadow(0 0 8px #D4AF37)"] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              className="text-6xl"
             >
-              🎂
+              🔐
             </motion.div>
-            <h1 className="text-4xl md:text-6xl font-playfair font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
-              Happy Birthday!
-            </h1>
-            <p className="text-white/80 font-light text-lg tracking-wide max-w-md leading-relaxed">
-              The celebration vault is now officially decrypted.
-            </p>
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 35px rgba(212,175,55,0.7)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onUnlock}
-              className="mt-6 px-12 py-4 bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] text-black font-bold rounded-full shadow-[0_0_30px_rgba(212,175,55,0.6)] text-lg cursor-pointer uppercase tracking-wider transition-all duration-300"
+
+            {/* Main title - gentle float */}
+            <motion.h1
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="text-3xl md:text-4xl font-playfair font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] leading-tight"
             >
-              Enter Celebration Mode →
-            </motion.button>
+              Acha socha darling... 😏
+            </motion.h1>
+
+            {/* Staggered roast lines */}
+            {[
+              { text: "Itna mehnat kiya... itni missions complete kiya...", delay: 0.3 },
+              { text: "aur password? Abhi bhi nahi milega 😇", delay: 0.6 },
+            ].map((line, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: line.delay, duration: 0.6, ease: "easeOut" }}
+                className="text-white/65 font-light text-sm font-poppins leading-relaxed"
+              >
+                {line.text}
+              </motion.p>
+            ))}
+
+            {/* Lock card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: "spring", stiffness: 140, damping: 16 }}
+              className="w-full bg-black/50 border border-[#D4AF37]/20 rounded-2xl px-5 py-5 flex flex-col gap-3"
+            >
+              <span className="text-[#D4AF37] font-playfair text-sm flex items-center gap-2 justify-center">
+                🔒 Private Mode — Locked, Jaan.
+              </span>
+
+              <p className="text-white/55 text-xs font-light leading-relaxed">
+                Password tab milega jab birthday aaye — 13 July ko. Tab tak patience rakho darling, tum itni cute ho yeh wait worth it hai. 🥰
+              </p>
+
+              <motion.div
+                animate={{ boxShadow: ["0 0 0px rgba(212,175,55,0)", "0 0 12px rgba(212,175,55,0.3)", "0 0 0px rgba(212,175,55,0)"] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+                className="mt-1 px-4 py-3 bg-black/60 rounded-xl border border-[#D4AF37]/20"
+              >
+                <p className="text-[10px] text-white/35 uppercase tracking-widest mb-1 font-mono">Unlocks on</p>
+                <span className="text-[#FFF3B0] font-mono text-sm tracking-widest font-bold">
+                  13 JULY · 1:00 PM ❤️
+                </span>
+              </motion.div>
+            </motion.div>
+
+            {/* Cute sign-off */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 }}
+              className="text-white/30 text-[11px] italic font-light"
+            >
+              — Tumhara Karan 🙈
+            </motion.p>
           </motion.div>
         ) : (
           /* LOCKED COUNTDOWN STATE */
@@ -168,10 +197,13 @@ export default function Day2_CompletionCountdown({ onUnlock }: { onUnlock: () =>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FFF3B0]/10 to-transparent pointer-events-none -translate-x-full animate-[shimmer_6s_infinite] duration-[3000ms]" />
 
               <span className="text-[#D4AF37] font-semibold text-lg md:text-xl flex items-center gap-2 font-playfair">
-                🏆 Celebration Core Decoded
+                🎁 Final Password Revealed
               </span>
-              <span className="text-xs md:text-sm font-mono text-white tracking-[0.05em] font-bold drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] my-3 select-none text-center break-words max-w-full uppercase">
-                NHI BTAUNGA BETA SABAR KRO HAHAHHAHAH
+              <span className="text-sm md:text-base font-mono text-white tracking-[0.08em] font-bold drop-shadow-[0_0_14px_rgba(255,255,255,0.5)] my-3 select-none text-center break-words max-w-full">
+                Sabar Rakh Beta 😂
+              </span>
+              <span className="text-xs font-light text-white/50 italic text-center">
+                Nhi Bataunga Password... Haha 🙈
               </span>
               <p className="text-white/60 text-xs md:text-sm leading-relaxed font-light">
                 The full authentication sequence is complete.<br />

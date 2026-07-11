@@ -31,7 +31,7 @@ const questions: Question[] = [
   {
     question: "What is my favourite thing about you?",
     options: ["Your Smile", "Your Eyes", "Your Hair", "Your Kindness"],
-    correctIndex: 0,
+    correctIndex: 1,
   },
   {
     question: "Who never leaves my side no matter what?",
