@@ -147,7 +147,7 @@ export default function UnlockCeremony({ startScene, onLaunch }: UnlockCeremonyP
         setLoadingTextIndex(0);
         setScene("private_loading");
       } else {
-        setErrorMsg("Incorrect Password. Please try again.");
+        setErrorMsg("❌ Incorrect Access Code. Please ask Karan for the correct password.");
         setTimeout(() => setErrorMsg(""), 3000);
       }
     }
@@ -386,18 +386,26 @@ export default function UnlockCeremony({ startScene, onLaunch }: UnlockCeremonyP
               whileHover={{ y: -8, borderColor: "rgba(212,175,55,0.5)" }}
               className="flex-1 bg-white/[0.02] border border-white/10 p-8 rounded-3xl backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.3)] flex flex-col justify-between items-center text-center transition-all duration-300 min-h-[300px]"
             >
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-4 w-full">
                 <span className="text-5xl">❤️</span>
-                <h3 className="text-2xl font-playfair text-[#D4AF37] font-semibold">Private Mode</h3>
-                <p className="text-white/50 text-sm font-light leading-relaxed">
-                  Enter the private journey made exclusively for you.
+                <h3 className="text-2xl font-playfair text-[#D4AF37] font-semibold flex items-center gap-2">Private Mode</h3>
+                
+                <p className="text-white/70 text-sm font-light leading-relaxed mt-2">
+                  This section contains a special surprise.<br/>
+                  To enter, please ask Karan for the Private Access Code.
                 </p>
+
+                <div className="mt-4 p-4 w-full bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+                  <span className="text-[#D4AF37] text-lg mb-1 block">💬</span>
+                  <p className="text-white/60 text-xs uppercase tracking-widest font-semibold mb-1">Need the Private Access Code?</p>
+                  <p className="text-white/50 text-xs italic">Ask Karan for the password.</p>
+                </div>
               </div>
               <button
                 onClick={() => setScene("private_pass")}
-                className="w-full mt-8 py-3 bg-[#D4AF37] hover:bg-[#AA7C11] text-black font-semibold rounded-full transition-colors text-sm shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+                className="w-full mt-8 py-3 bg-[#D4AF37] hover:bg-[#AA7C11] text-black font-semibold rounded-full transition-colors text-sm shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center justify-center gap-2"
               >
-                Continue →
+                <span>🔑</span> Enter Private Access Code
               </button>
             </motion.div>
           </motion.div>
@@ -471,7 +479,7 @@ export default function UnlockCeremony({ startScene, onLaunch }: UnlockCeremonyP
             <div className="bg-white/[0.02] border border-white/10 p-8 rounded-3xl backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.3)] w-full flex flex-col items-center">
               <h2 className="text-2xl font-playfair text-[#D4AF37] mb-2 font-semibold">Private Access</h2>
               <p className="text-white/50 text-xs font-light mb-6 text-center">
-                Please enter your private password.
+                This password is available only from Karan.
               </p>
 
               <motion.div 
@@ -481,7 +489,7 @@ export default function UnlockCeremony({ startScene, onLaunch }: UnlockCeremonyP
               >
                 <input
                   type="password"
-                  placeholder="Enter Private Password"
+                  placeholder="Enter Access Code"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}

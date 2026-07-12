@@ -11,9 +11,11 @@ import Day1_CompletionCountdown from "./pre_event/Day1_CompletionCountdown";
 import Day2_CompletionCountdown from "./pre_event/Day2_CompletionCountdown";
 import GoldenParticles from "./pre_event/GoldenParticles";
 import PreEventTransition from "./pre_event/PreEventTransition";
+import MidnightBirthdayScreen from "./MidnightBirthdayScreen";
 import { TEST_MODE } from "@/config";
 import { sfx } from "@/utils/sfx";
 
+const MIDNIGHT_DATE = new Date("2026-07-13T00:00:00");
 const TARGET_DATE = new Date("2026-07-13T13:00:00");
 
 export default function LaunchTimer({ children }: { children: React.ReactNode }) {
@@ -26,7 +28,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   const [currentPreEventState, setCurrentPreEventState] = useState<"day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown">("day1_playing");
   const [bypassMode, setBypassMode] = useState<"day1" | "day2" | null>(null);
   
-  const [isTimeLocked, setIsTimeLocked] = useState(true);
+  const [lockPhase, setLockPhase] = useState<"pre_event" | "midnight" | "unlocked">("pre_event");
   const [initialUnlocked, setInitialUnlocked] = useState(false);
   
   const wasLockedRef = useRef(true);
@@ -48,30 +50,50 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
     setMounted(true);
     document.body.style.overflow = "hidden";
 
+    // TEMPORARY BYPASS: Auto-complete Day 1 and Day 2 so you can see the countdown screen
+    localStorage.setItem("preEvent_day1_completed", "true");
+    localStorage.setItem("preEvent_day2_completed", "true");
+
     if (TEST_MODE) {
       // In TEST_MODE, start with unlocked ceremony bypassed, and ignore checks
-      setIsTimeLocked(false);
+      setLockPhase("unlocked");
       setInitialUnlocked(true);
       updatePreEventRoute();
       return;
     }
 
+    const getPhase = (date: Date) => {
+      if (date < MIDNIGHT_DATE) return "pre_event";
+      if (date < TARGET_DATE) return "midnight";
+      return "unlocked";
+    };
+
     // Initial check
-    const initialLock = new Date() < TARGET_DATE;
-    setIsTimeLocked(initialLock);
-    setInitialUnlocked(!initialLock);
-    wasLockedRef.current = initialLock;
+    const now = new Date();
+    const initialPhase = getPhase(now);
+    setLockPhase(initialPhase);
+    setInitialUnlocked(initialPhase === "unlocked");
+    wasLockedRef.current = initialPhase !== "unlocked";
     
     updatePreEventRoute();
 
     // Real-time security tick (updates every second)
     const interval = setInterval(() => {
-      const now = new Date();
-      const currentLock = now < TARGET_DATE;
-      setIsTimeLocked(currentLock);
+      const currentTime = new Date();
+      const currentPhase = getPhase(currentTime);
+      
+      setLockPhase(prev => {
+        // Automatically hide the pre-event mission UI when we hit midnight or later
+        if (prev === "pre_event" && (currentPhase === "midnight" || currentPhase === "unlocked")) {
+          setPreEventActive(false);
+          setBypassMode(null);
+        }
+        return currentPhase;
+      });
+      
       updatePreEventRoute();
 
-      if (wasLockedRef.current && !currentLock) {
+      if (wasLockedRef.current && currentPhase === "unlocked") {
         wasLockedRef.current = false;
       }
     }, 1000);
@@ -86,9 +108,15 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
   }, [isLaunched, mounted]);
 
   const handlePreEventUnlock = () => {
-    setAppMode("family");
-    setIsLaunched(true);
-    document.body.style.overflow = "";
+    if (TEST_MODE) {
+      setPreEventActive(false);
+      setBypassMode(null);
+      setLockPhase("midnight");
+    } else {
+      setAppMode("family");
+      setIsLaunched(true);
+      document.body.style.overflow = "";
+    }
   };
 
   const handleLaunch = (mode: "family" | "private") => {
@@ -165,7 +193,7 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
           >
             <GoldenParticles />
             <AnimatePresence mode="wait">
-              {isTimeLocked ? (
+              {lockPhase === "pre_event" && (
                 /* 1. COUNTDOWN LOCK SCREEN */
                 <motion.div 
                   key="countdown" 
@@ -175,13 +203,32 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
                   className="w-full h-full flex items-center justify-center"
                 >
                   <CountdownLock 
-                    targetDate={TARGET_DATE} 
+                    targetDate={MIDNIGHT_DATE} 
                     onUnlock={() => {}} 
                     onEnterPreEvent={() => setShowPreEventTransition(true)}
                   />
                 </motion.div>
-              ) : (
-                /* 2. CELBRATION UNLOCK CEREMONY */
+              )}
+              {lockPhase === "midnight" && (
+                /* 2. MIDNIGHT BIRTHDAY WISH SCREEN */
+                <motion.div 
+                  key="midnight" 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  exit={{ opacity: 0 }}
+                  className="w-full h-full flex items-center justify-center"
+                >
+                  <MidnightBirthdayScreen 
+                    targetDate={TARGET_DATE} 
+                    onPlayUnlock={() => {
+                      sfx.playUnlock();
+                      setLockPhase("unlocked");
+                    }}
+                  />
+                </motion.div>
+              )}
+              {lockPhase === "unlocked" && (
+                /* 3. CELBRATION UNLOCK CEREMONY */
                 <motion.div 
                   key="ceremony" 
                   initial={{ opacity: 0 }} 
@@ -219,8 +266,8 @@ export default function LaunchTimer({ children }: { children: React.ReactNode })
           setBypassMode={setBypassMode}
           currentPreEventState={currentPreEventState}
           setCurrentPreEventState={setCurrentPreEventState}
-          isTimeLocked={isTimeLocked}
-          setIsTimeLocked={setIsTimeLocked}
+          lockPhase={lockPhase}
+          setLockPhase={setLockPhase}
         />
       )}
     </>
@@ -236,8 +283,8 @@ function DevTestPanel({
   setBypassMode,
   currentPreEventState,
   setCurrentPreEventState,
-  isTimeLocked,
-  setIsTimeLocked,
+  lockPhase,
+  setLockPhase,
 }: {
   isLaunched: boolean;
   setIsLaunched: (v: boolean) => void;
@@ -247,8 +294,8 @@ function DevTestPanel({
   setBypassMode: (v: "day1" | "day2" | null) => void;
   currentPreEventState: "day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown";
   setCurrentPreEventState: (v: "day1_playing" | "day1_countdown" | "day2_playing" | "day2_countdown") => void;
-  isTimeLocked: boolean;
-  setIsTimeLocked: (v: boolean) => void;
+  lockPhase: "pre_event" | "midnight" | "unlocked";
+  setLockPhase: (v: "pre_event" | "midnight" | "unlocked") => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const { setAppMode } = useStore();
@@ -259,36 +306,41 @@ function DevTestPanel({
       setIsLaunched(false);
       setPreEventActive(false);
       setBypassMode(null);
-      setIsTimeLocked(true);
+      setLockPhase("pre_event");
+    } else if (flow === "midnight_screen") {
+      setIsLaunched(false);
+      setPreEventActive(false);
+      setBypassMode(null);
+      setLockPhase("midnight");
     } else if (flow === "day1_mission") {
       setIsLaunched(false);
       setPreEventActive(true);
       setBypassMode("day1");
       setCurrentPreEventState("day1_playing");
-      setIsTimeLocked(true);
+      setLockPhase("pre_event");
     } else if (flow === "day1_completed") {
       setIsLaunched(false);
       setPreEventActive(true);
       setBypassMode(null);
       setCurrentPreEventState("day1_countdown");
-      setIsTimeLocked(true);
+      setLockPhase("pre_event");
     } else if (flow === "day2_mission") {
       setIsLaunched(false);
       setPreEventActive(true);
       setBypassMode("day2");
       setCurrentPreEventState("day2_playing");
-      setIsTimeLocked(true);
+      setLockPhase("pre_event");
     } else if (flow === "day2_completed") {
       setIsLaunched(false);
       setPreEventActive(true);
       setBypassMode(null);
       setCurrentPreEventState("day2_countdown");
-      setIsTimeLocked(true);
+      setLockPhase("pre_event");
     } else if (flow === "ceremony") {
       setIsLaunched(false);
       setPreEventActive(false);
       setBypassMode(null);
-      setIsTimeLocked(false);
+      setLockPhase("unlocked");
     } else if (flow === "app_private") {
       setAppMode("private");
       setIsLaunched(true);
@@ -319,11 +371,12 @@ function DevTestPanel({
               <span className="text-[9px] text-white/40 tracking-wider font-semibold uppercase">TIMELINES</span>
               {[
                 { id: "lock_screen", label: "Countdown Lock Screen" },
-                { id: "day1_mission", label: "Day 1 Mission" },
-                { id: "day1_completed", label: "Day 1 Complete" },
-                { id: "day2_mission", label: "Day 2 Mission" },
-                { id: "day2_completed", label: "Day 2 Complete" },
-                { id: "ceremony", label: "Unlock Ceremony" },
+                { id: "day1_mission", label: "Start Day 1" },
+                { id: "day1_completed", label: "Complete Day 1" },
+                { id: "day2_mission", label: "Start Day 2" },
+                { id: "day2_completed", label: "Complete Day 2" },
+                { id: "midnight_screen", label: "Open Midnight Birthday Screen" },
+                { id: "ceremony", label: "Play Birthday Unlock Ceremony" },
               ].map((btn) => (
                 <button
                   key={btn.id}
@@ -338,8 +391,8 @@ function DevTestPanel({
             <div className="flex flex-col gap-1.5">
               <span className="text-[9px] text-white/40 tracking-wider font-semibold uppercase">LAUNCH APPS</span>
               {[
-                { id: "app_private", label: "Launch Private Mode" },
-                { id: "app_family", label: "Launch Family Mode" },
+                { id: "app_private", label: "Open Private Mode" },
+                { id: "app_family", label: "Open Family Mode" },
               ].map((btn) => (
                 <button
                   key={btn.id}
@@ -359,7 +412,7 @@ function DevTestPanel({
               }}
               className="px-2.5 py-1 rounded bg-red-950/40 border border-red-500/20 hover:border-red-500/50 hover:bg-red-950/60 text-red-400 transition-all text-center cursor-pointer font-bold uppercase text-[9px]"
             >
-              Clear Progress
+              Restart Entire Journey
             </button>
           </motion.div>
         )}
