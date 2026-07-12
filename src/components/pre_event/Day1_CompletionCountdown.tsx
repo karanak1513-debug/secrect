@@ -37,6 +37,7 @@ export default function Day1_CompletionCountdown({ onTimeUp, onReturnLater }: Da
     sfx.playClick();
     localStorage.removeItem("preEvent_day1_completed");
     localStorage.removeItem("preEvent_day2_completed");
+    localStorage.removeItem("grand_finale_completed");
     window.location.reload();
   };
 
@@ -79,6 +80,7 @@ export default function Day1_CompletionCountdown({ onTimeUp, onReturnLater }: Da
           sfx.playClick();
           // Explicitly clear Day 2 progress to force a fresh run
           localStorage.removeItem("preEvent_day2_completed");
+          localStorage.removeItem("grand_finale_completed");
           onTimeUp();
         }}
         className="px-10 py-4 bg-gradient-to-r from-[#D4AF37] via-[#FFF3B0] to-[#D4AF37] text-black font-semibold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(212,175,55,0.4)] cursor-pointer text-sm uppercase tracking-wider flex items-center gap-3 relative z-50"

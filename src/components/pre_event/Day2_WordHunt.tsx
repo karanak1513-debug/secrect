@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { sfx } from "@/utils/sfx";
 
 const WORDS = ["ANUSHKA","BIRTHDAY","FOREVER","DIAMOND","PRINCESS","BELOVED","MIRACLE","DESTINY","ETERNAL","PRECIOUS","CHERISH","RADIANT","TWILIGHT","MYSTERY","QUANTUM"];
@@ -27,13 +27,11 @@ function makeWordGrid(word: string) {
 }
 
 export default function Day2_WordHunt({ onComplete }: { onComplete: () => void }) {
-  const [wordIdx, setWordIdx] = useState(0);
   const [word] = useState(() => WORDS[Math.floor(Math.random() * WORDS.length)]);
   const [grid, setGrid] = useState<string[][]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmed, setConfirmed] = useState<Set<string>>(new Set());
   const [started, setStarted] = useState(false);
-  const [dragging, setDragging] = useState(false);
 
   useEffect(() => { setGrid(makeWordGrid(word)); }, [word]);
 
@@ -46,7 +44,11 @@ export default function Day2_WordHunt({ onComplete }: { onComplete: () => void }
     const k = getKey(r, c);
     setSelected(prev => {
       const n = new Set(prev);
-      n.has(k) ? n.delete(k) : n.add(k);
+      if (n.has(k)) {
+        n.delete(k);
+      } else {
+        n.add(k);
+      }
       return n;
     });
   };

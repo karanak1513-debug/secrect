@@ -17,7 +17,7 @@ export default function Day2_SlidingTile({ onComplete }: { onComplete: () => voi
     solved.push(0); // 0 is empty
 
     // Simple shuffle by making valid moves
-    let shuffled = [...solved];
+    const shuffled = [...solved];
     let emptyIdx = TOTAL_TILES - 1;
 
     for (let i = 0; i < 100; i++) {

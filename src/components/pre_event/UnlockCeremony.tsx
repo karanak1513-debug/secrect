@@ -478,8 +478,8 @@ export default function UnlockCeremony({ startScene, onLaunch }: UnlockCeremonyP
             </button>
             <div className="bg-white/[0.02] border border-white/10 p-8 rounded-3xl backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.3)] w-full flex flex-col items-center">
               <h2 className="text-2xl font-playfair text-[#D4AF37] mb-2 font-semibold">Private Access</h2>
-              <p className="text-white/50 text-xs font-light mb-6 text-center">
-                This password is available only from Karan.
+              <p className="text-white/70 text-xs font-light mb-6 text-center">
+                🔒 Please ask Karan for the Private Access Code.
               </p>
 
               <motion.div 

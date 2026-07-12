@@ -72,6 +72,21 @@ export default function MidnightBirthdayScreen({ targetDate, onPlayUnlock }: Mid
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const playAudio = () => {
+      const audio = document.getElementById("midnight-audio") as HTMLAudioElement;
+      if (audio) {
+        audio.play().catch(() => {});
+      }
+    };
+    window.addEventListener("click", playAudio);
+    window.addEventListener("touchstart", playAudio);
+    return () => {
+      window.removeEventListener("click", playAudio);
+      window.removeEventListener("touchstart", playAudio);
+    };
+  }, []);
+
   const typewriterVariants = {
     hidden: { opacity: 0 },
     visible: (i: number) => ({

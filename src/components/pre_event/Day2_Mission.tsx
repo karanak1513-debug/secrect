@@ -14,7 +14,6 @@ import Day2_ColorMemory from "./Day2_ColorMemory";
 import Day2_RiddleVault from "./Day2_RiddleVault";
 import MissionIntro from "./MissionIntro";
 import MissionComplete from "./MissionComplete";
-import Day2_CompletionCountdown from "./Day2_CompletionCountdown";
 import { sfx } from "@/utils/sfx";
 
 interface MissionConfig {
@@ -89,10 +88,14 @@ const MISSIONS: Record<number, MissionConfig> = {
 
 const TOTAL_MISSIONS = 10;
 
-export default function Day2_Mission({ onUnlock }: { onUnlock: () => void }) {
+interface Day2_MissionProps {
+  onUnlock: () => void;
+  onCompleteDay2?: () => void;
+}
+
+export default function Day2_Mission({ onUnlock, onCompleteDay2 }: Day2_MissionProps) {
   const [step, setStep] = useState(6);
   const [subStep, setSubStep] = useState<"intro" | "playing" | "success">("intro");
-  const [showCompletion, setShowCompletion] = useState(false);
 
   const handleStartMission = () => setSubStep("playing");
   const handleChallengeComplete = () => setSubStep("success");
@@ -105,8 +108,9 @@ export default function Day2_Mission({ onUnlock }: { onUnlock: () => void }) {
 
   const handleAllCompleted = () => {
     localStorage.setItem("preEvent_day2_completed", "true");
-    setStep(TOTAL_MISSIONS + 1);
-    setShowCompletion(true);
+    if (onCompleteDay2) {
+      onCompleteDay2();
+    }
   };
 
   const wrapMotion = (key: string, child: React.ReactNode) => (
@@ -180,11 +184,7 @@ export default function Day2_Mission({ onUnlock }: { onUnlock: () => void }) {
         {step === 9 && subStep === "playing" && wrapMotion("c9", <Day2_ColorMemory onComplete={handleChallengeComplete} />)}
         {step === 10 && subStep === "playing" && wrapMotion("c10", <Day2_RiddleVault onComplete={handleChallengeComplete} />)}
 
-        {showCompletion && step === TOTAL_MISSIONS + 1 && (
-          <motion.div key="completion" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
-            <Day2_CompletionCountdown onUnlock={onUnlock} />
-          </motion.div>
-        )}
+
       </AnimatePresence>
 
       {/* Progress dots */}
