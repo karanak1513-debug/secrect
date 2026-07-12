@@ -280,13 +280,13 @@ function DevTestPanelForTestMode({
               <span className="text-[9px] text-white/40 tracking-wider font-semibold uppercase">TIMELINES</span>
               {[
                 { id: "landing", label: "Landing Page" },
-                { id: "day1", label: "Start Day 1" },
-                { id: "day1_countdown", label: "Complete Day 1" },
-                { id: "day2", label: "Start Day 2" },
-                { id: "grandFinale", label: "Open Grand Finale" },
-                { id: "timeline", label: "Open Birthday Timeline" },
-                { id: "midnight", label: "Open Midnight Birthday Wish" },
-                { id: "unlock", label: "Play Unlock Ceremony" },
+                { id: "day1_countdown", label: "Countdown Screen" },
+                { id: "day1", label: "Day 1" },
+                { id: "day2", label: "Day 2" },
+                { id: "grandFinale", label: "Grand Finale" },
+                { id: "timeline", label: "Birthday Timeline" },
+                { id: "midnight", label: "Midnight Birthday Wish" },
+                { id: "unlock", label: "Unlock Ceremony" },
               ].map((btn, idx) => (
                 <button
                   key={`${btn.id}-${idx}`}
@@ -305,8 +305,8 @@ function DevTestPanelForTestMode({
             <div className="flex flex-col gap-1.5">
               <span className="text-[9px] text-white/40 tracking-wider font-semibold uppercase">LAUNCH APPS</span>
               {[
-                { id: "family", label: "Open Family Mode" },
-                { id: "private", label: "Open Private Mode" },
+                { id: "family", label: "Family Mode" },
+                { id: "private", label: "Private Mode" },
               ].map((btn) => (
                 <button
                   key={btn.id}
@@ -327,7 +327,7 @@ function DevTestPanelForTestMode({
                 onClick={() => selectFlow("restart")}
                 className="px-2.5 py-1.5 rounded bg-red-950/40 border border-red-500/20 hover:border-red-500/50 hover:bg-red-950/60 text-red-400 transition-all text-center cursor-pointer font-bold uppercase text-[9px]"
               >
-                Restart Journey
+                Reset Journey
               </button>
 
               <button
