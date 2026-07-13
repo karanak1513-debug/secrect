@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
 
 const MIDNIGHT_DATE = new Date("2026-07-13T00:00:00");
-const TARGET_DATE = new Date("2026-07-13T13:00:00");
+const TARGET_DATE = new Date("2026-07-13T15:00:00");
 
 interface TimeLeft {
   days: number;
@@ -275,7 +275,7 @@ export default function Day2_CompletionCountdown({ onUnlock: _onUnlock }: { onUn
             <div className="flex items-center gap-3 text-white/50 text-[10px] md:text-xs tracking-[0.2em] font-mono select-none">
               <span>13 JULY</span>
               <span className="w-1 h-1 rounded-full bg-[#D4AF37]" />
-              <span>1:00 PM</span>
+              <span>3:00 PM</span>
             </div>
             
             {renderCountdown(timeLeftMain)}

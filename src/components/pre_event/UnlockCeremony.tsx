@@ -332,7 +332,7 @@ export default function UnlockCeremony({ startScene, onLaunch }: UnlockCeremonyP
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white/60">Time</span>
-                  <span className="text-white/95 font-medium">1:00 PM</span>
+                  <span className="text-white/95 font-medium">3:00 PM</span>
                 </div>
               </div>
 

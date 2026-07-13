@@ -4,17 +4,27 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
 import { sfx } from "@/utils/sfx";
 import { TEST_MODE } from "@/config";
+import AccessCodeModal from "./AccessCodeModal";
 
 interface CountdownLockProps {
   targetDate: Date;
   onUnlock: () => void;
   onEnterPreEvent: (day: "day1" | "day2") => void;
+  onAccessCodeUnlock?: (codeType: "early" | "admin") => void;
+  countdownOverriddenToZero?: boolean;
 }
 
-export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }: CountdownLockProps) {
+export default function CountdownLock({
+  targetDate,
+  onUnlock,
+  onEnterPreEvent,
+  onAccessCodeUnlock,
+  countdownOverriddenToZero,
+}: CountdownLockProps) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isReady, setIsReady] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
+  const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -31,6 +41,12 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
   const spotlightBg = useMotionTemplate`radial-gradient(circle 500px at ${spotlightX}px ${spotlightY}px, rgba(212, 175, 55, 0.08) 0%, transparent 80%)`;
 
   useEffect(() => {
+    if (countdownOverriddenToZero) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      setIsReady(true);
+      return;
+    }
+
     if (TEST_MODE) {
       setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       setIsReady(true);
@@ -61,7 +77,7 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDate, onUnlock, unlocked]);
+  }, [targetDate, onUnlock, unlocked, countdownOverriddenToZero]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -215,7 +231,7 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
             <div className="relative px-6 py-2.5 bg-black/60 border border-white/[0.08] group-hover:border-[#D4AF37]/35 rounded-full backdrop-blur-md flex items-center gap-2.5 shadow-[0_0_20px_rgba(0,0,0,0.6)] transition-all duration-500">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
               <span className="text-[#FFF3B0] font-poppins font-medium tracking-[0.25em] uppercase text-[10px] md:text-xs">
-                13 July • 1:00 PM
+                13 July • 3:00 PM
               </span>
             </div>
           </motion.div>
@@ -294,6 +310,16 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
           "Patience makes the sweetest surprises even more beautiful."
         </motion.p>
 
+        {/* Access Code Trigger Button */}
+        <motion.div variants={itemVariants} className="mb-6 flex justify-center">
+          <button
+            onClick={() => setIsAccessModalOpen(true)}
+            className="px-5 py-2.5 bg-black/60 border border-[#D4AF37]/25 hover:border-[#D4AF37]/55 hover:bg-black/80 rounded-full text-[#FFF3B0]/80 hover:text-[#FFF3B0] transition-all duration-300 font-poppins text-xs tracking-wider flex items-center gap-2 cursor-pointer backdrop-blur-md shadow-lg"
+          >
+            <span>🔒</span> Have an Access Code?
+          </button>
+        </motion.div>
+
         {/* Redesigned Shimmer Button */}
         {showPreEventButton && (
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
@@ -324,6 +350,17 @@ export default function CountdownLock({ targetDate, onUnlock, onEnterPreEvent }:
           </motion.div>
         )}
       </motion.div>
+
+      {/* Access Code Modal */}
+      <AccessCodeModal
+        isOpen={isAccessModalOpen}
+        onClose={() => setIsAccessModalOpen(false)}
+        onVerify={(codeType) => {
+          if (onAccessCodeUnlock) {
+            onAccessCodeUnlock(codeType);
+          }
+        }}
+      />
     </div>
   );
 }

@@ -459,7 +459,7 @@ export default function GrandFinaleSequence({ onComplete }: GrandFinaleSequenceP
                     <span className="text-[10px] text-white/40 uppercase tracking-widest font-semibold mb-3">CONDUIT STATUS: CLOSED</span>
                     <div className="px-5 py-2.5 bg-black/50 border border-[#D4AF37]/35 rounded-full flex flex-col items-center">
                       <span className="text-[9px] text-[#FFF3B0] font-medium tracking-[0.25em] uppercase">Waiting For</span>
-                      <span className="text-sm font-semibold font-playfair text-white mt-1">13 July • 1:00 PM</span>
+                      <span className="text-sm font-semibold font-playfair text-white mt-1">13 July • 3:00 PM</span>
                     </div>
                   </div>
                 )}

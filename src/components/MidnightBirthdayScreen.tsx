@@ -5,19 +5,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import GoldenParticles from "./pre_event/GoldenParticles";
 import { TEST_MODE } from "@/config";
+import AccessCodeModal from "./pre_event/AccessCodeModal";
 
 interface MidnightBirthdayScreenProps {
-  targetDate: Date; // The time of the full unlock (1:00 PM)
+  targetDate: Date; // The time of the full unlock (3:00 PM)
   onPlayUnlock?: () => void;
+  onAccessCodeUnlock?: (codeType: "early" | "admin") => void;
+  countdownOverriddenToZero?: boolean;
 }
 
-export default function MidnightBirthdayScreen({ targetDate, onPlayUnlock }: MidnightBirthdayScreenProps) {
+export default function MidnightBirthdayScreen({
+  targetDate,
+  onPlayUnlock,
+  onAccessCodeUnlock,
+  countdownOverriddenToZero,
+}: MidnightBirthdayScreenProps) {
   const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number } | null>(null);
   const [showMessage, setShowMessage] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
 
-  // Countdown logic targeting 1:00 PM
+  // Countdown logic targeting 3:00 PM
   useEffect(() => {
+    if (countdownOverriddenToZero) {
+      setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+      return;
+    }
+
     const calculateTimeLeft = () => {
       const difference = +targetDate - +new Date();
       if (difference > 0) {
@@ -34,7 +48,7 @@ export default function MidnightBirthdayScreen({ targetDate, onPlayUnlock }: Mid
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
-  }, [targetDate]);
+  }, [targetDate, countdownOverriddenToZero]);
 
   // Confetti every 20 seconds
   useEffect(() => {
@@ -394,7 +408,7 @@ export default function MidnightBirthdayScreen({ targetDate, onPlayUnlock }: Mid
                 style={{ borderColor: "rgba(255, 255, 255, 0.12)" }}
                 className="px-10 py-3.5 bg-transparent border text-white font-semibold rounded-full shadow-[0_0_20px_rgba(0,0,0,0.4)] transition-all cursor-pointer text-xs tracking-widest uppercase"
               >
-                ✨ I'll Be Back at 1:00 PM
+                ✨ I'll Be Back at 3:00 PM
               </motion.button>
             ) : (
               <motion.div
@@ -404,11 +418,25 @@ export default function MidnightBirthdayScreen({ targetDate, onPlayUnlock }: Mid
                 className="px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-center backdrop-blur-md shadow-lg max-w-[400px]"
               >
                 <p className="text-white/80 text-sm font-light leading-[1.85]">
-                  See you at <span className="text-[#D4AF37] font-semibold">1:00 PM</span>. Your surprise will be waiting for you. 🎁
+                  See you at <span className="text-[#D4AF37] font-semibold">3:00 PM</span>. Your surprise will be waiting for you. 🎁
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Access Code Trigger Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <button
+              onClick={() => setIsAccessModalOpen(true)}
+              className="px-5 py-2.5 bg-black/60 border border-[#D4AF37]/25 hover:border-[#D4AF37]/55 hover:bg-black/80 rounded-full text-[#FFF3B0]/80 hover:text-[#FFF3B0] transition-all duration-300 font-poppins text-xs tracking-wider flex items-center gap-2 cursor-pointer backdrop-blur-md shadow-lg"
+            >
+              <span>🔒</span> Have an Access Code?
+            </button>
+          </motion.div>
         </div>
 
         {/* Bottom Quote */}
@@ -423,6 +451,17 @@ export default function MidnightBirthdayScreen({ targetDate, onPlayUnlock }: Mid
           {isAudioPlaying ? "🔊" : "🔇"}
         </div>
       </div>
+
+      {/* Access Code Modal */}
+      <AccessCodeModal
+        isOpen={isAccessModalOpen}
+        onClose={() => setIsAccessModalOpen(false)}
+        onVerify={(codeType) => {
+          if (onAccessCodeUnlock) {
+            onAccessCodeUnlock(codeType);
+          }
+        }}
+      />
 
       {/* Background loop audio element */}
       <audio id="midnight-audio" loop src="/assets/audio/midnight_piano.mp3" style={{ display: "none" }} />

@@ -17,7 +17,7 @@ import { TEST_MODE } from "@/config";
 import { sfx } from "@/utils/sfx";
 
 const MIDNIGHT_DATE = new Date("2026-07-13T00:00:00");
-const TARGET_DATE = new Date("2026-07-13T13:00:00");
+const TARGET_DATE = new Date("2026-07-13T15:00:00");
 
 export default function LaunchTimer({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -375,6 +375,8 @@ function ProductionModeContainer({
   const [bypassMode, setBypassMode] = useState<"day1" | "day2" | null>(null);
   const [lockPhase, setLockPhase] = useState<"pre_event" | "midnight" | "unlocked">("pre_event");
   const [initialUnlocked, setInitialUnlocked] = useState(false);
+  const [sessionUnlocked, setSessionUnlocked] = useState(false);
+  const [countdownOverriddenToZero, setCountdownOverriddenToZero] = useState(false);
 
   const wasLockedRef = useRef(true);
 
@@ -394,10 +396,24 @@ function ProductionModeContainer({
     }
   };
 
+  const handleAccessCodeUnlock = (codeType: "early" | "admin") => {
+    if (codeType === "early") {
+      setSessionUnlocked(true);
+    } else if (codeType === "admin") {
+      setCountdownOverriddenToZero(true);
+      localStorage.setItem("admin_unlocked", "true");
+      setTimeout(() => {
+        setSessionUnlocked(true);
+      }, 1500);
+    }
+  };
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
     const getPhase = (date: Date) => {
+      if (localStorage.getItem("admin_unlocked") === "true") return "unlocked";
+      if (sessionUnlocked) return "unlocked";
       if (date < MIDNIGHT_DATE) return "pre_event";
       if (date < TARGET_DATE) return "midnight";
       return "unlocked";
@@ -428,7 +444,7 @@ function ProductionModeContainer({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [sessionUnlocked]);
 
   useEffect(() => {
     if (!isLaunched) {
@@ -553,6 +569,8 @@ function ProductionModeContainer({
                     targetDate={MIDNIGHT_DATE}
                     onUnlock={() => {}}
                     onEnterPreEvent={() => setShowPreEventTransition(true)}
+                    onAccessCodeUnlock={handleAccessCodeUnlock}
+                    countdownOverriddenToZero={countdownOverriddenToZero}
                   />
                 </motion.div>
               )}
@@ -570,6 +588,8 @@ function ProductionModeContainer({
                       sfx.playUnlock();
                       setLockPhase("unlocked");
                     }}
+                    onAccessCodeUnlock={handleAccessCodeUnlock}
+                    countdownOverriddenToZero={countdownOverriddenToZero}
                   />
                 </motion.div>
               )}
